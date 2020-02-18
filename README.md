@@ -2,7 +2,7 @@
 # DriveIt
 
 ## Cloning the project  
-* Run command `git clone https://github.com/ASE-Group-23/ASE-1-Project.git` and movie in the repository
+* Run command `git clone https://github.com/ASE-Group-23/ASE-1-Project.git` and move in the repository
 * Create a virtual environment `env` in the repository (use virtualenv, etc)
 * Activate virtual environment  
     >    Windows:  ```.\env\Scripts\activate```  
