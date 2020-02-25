@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView, CreateView
 from django.core.files.storage import FileSystemStorage
+from django.urls import reverse_lazy
 from .forms import UploadFileForm
 from .models import File_Test
 
@@ -22,7 +23,7 @@ def upload(request):
 def file_list(request):
 	files = File_Test.objects.all()
 	return render(request, 'upload/file_list.html', {
-		'files':files
+		'files': files
 	})
 
 
@@ -37,3 +38,23 @@ def upload_file(request):
 	return render(request, 'upload/upload_file.html', {
 		'form': form
 	})
+
+
+def delete_book(request, pk):
+	if request.method == 'POST':
+		file = File_Test.objects.get(pk=pk)
+		file.delete()
+	return redirect('file_list')
+
+
+class FileListView(ListView):
+	model = File_Test
+	template_name = 'upload/file_list.html'
+	context_object_name = 'files'
+
+
+class UploadFileVIew(CreateView):
+	model = File_Test
+	form_class = UploadFileForm
+	success_url = reverse_lazy('class_file_list')
+	template_name = 'upload/upload_file.html'
