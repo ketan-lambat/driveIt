@@ -129,5 +129,11 @@ dmypy.json
 .pyre/
 
 # IDE Settings
-.vscode/
 .idea/
+.vscode/
+.code/
+.atom/
+.sublime/
+
+# credentials
+secret_credentials/
