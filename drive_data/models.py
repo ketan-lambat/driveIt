@@ -43,7 +43,7 @@ class Directory(Folder):
 	is_root = True
 
 
-class File_Test(models.Model):
+class FileTest(models.Model):
 	file = models.FileField(upload_to='uploads/', null=False, default=None)
 	name = models.CharField(max_length=257, blank=False, editable=True)
 

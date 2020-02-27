@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, ListView, CreateView
 from django.core.files.storage import FileSystemStorage
 from django.urls import reverse_lazy
 from .forms import UploadFileForm
-from .models import File_Test
+from .models import FileTest
 
 
 class Home(TemplateView):
@@ -21,7 +21,7 @@ def upload(request):
 
 
 def file_list(request):
-	files = File_Test.objects.all()
+	files = FileTest.objects.all()
 	return render(request, 'upload/file_list.html', {
 		'files': files
 	})
@@ -42,19 +42,32 @@ def upload_file(request):
 
 def delete_book(request, pk):
 	if request.method == 'POST':
-		file = File_Test.objects.get(pk=pk)
+		file = FileTest.objects.get(pk=pk)
 		file.delete()
 	return redirect('file_list')
 
 
 class FileListView(ListView):
-	model = File_Test
+	model = FileTest
+
+	@staticmethod
+	def file_name(self, request):
+		if request.method == 'POST':
+			f_name = request.FILES['uploaded_file'].name
+			print(f_name)
+
 	template_name = 'upload/file_list.html'
 	context_object_name = 'files'
 
 
 class UploadFileVIew(CreateView):
-	model = File_Test
+	model = FileTest
 	form_class = UploadFileForm
+
+	def file_name(self, request):
+		if request.method == 'POST':
+			f_name = request.FILES['uploaded_file'].name
+			print(f_name)
+
 	success_url = reverse_lazy('class_file_list')
 	template_name = 'upload/upload_file.html'
