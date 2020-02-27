@@ -46,6 +46,7 @@ class Directory(Folder):
 class FileTest(models.Model):
 	file = models.FileField(upload_to='uploads/', null=False, default=None)
 	name = models.CharField(max_length=257, blank=False, editable=True)
+	size = models.DecimalField(max_digits=10, decimal_places=3, validators=[MinValueValidator(0.01)], blank=False, default=0.1)
 
 	def delete(self, *args, **kwargs):
 		self.file.delete()

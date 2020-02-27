@@ -30,14 +30,21 @@ def file_list(request):
 def upload_file(request):
 	if request.method == 'POST':
 		form = UploadFileForm(request.POST, request.FILES)
+		# print(request.FILES)
 		if form.is_valid():
-			form.save()
-			return redirect('file_list')
+			a = form.save()
+			f_name = request.FILES['file'].name
+			f_size = request.FILES['file'].size
+			a.name = f_name
+			a.size = f_size/1024
+			a.save()
+			# print(f_name)
+		return redirect('file_list')
 	else:
 		form = UploadFileForm
-	return render(request, 'upload/upload_file.html', {
-		'form': form
-	})
+		return render(request, 'upload/upload_file.html', {
+			'form': form
+		})
 
 
 def delete_book(request, pk):
