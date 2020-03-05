@@ -1,5 +1,7 @@
-from django.contrib.auth.models import User, AbstractUser
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-User = get_user_model()
+
+class User(AbstractUser):
+    drive = models.OneToOneField('drive_data.Folder', on_delete=models.SET_NULL, null=True)
+
