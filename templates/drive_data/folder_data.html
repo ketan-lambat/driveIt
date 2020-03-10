@@ -19,8 +19,7 @@
     <div id="new_folder" style="position: fixed; left: 45%; top: 12%; background: white; width: 50%; height: 20%;"
          hidden>
         <form class="col s12" id="create_folder_form" method="post"
-              action="{% url 'create_folder_view' path=current_path %}"
-              enctype="multipart/form-data">
+              action="{% url 'create_folder_view' path=current_path %}">
             {% csrf_token %}
             <div class="row">
                 <div class="row">
@@ -52,6 +51,7 @@
         form.onchange = function () {
             form.submit();
         };
+
         let cfb = document.getElementById("create_folder_button");
         let cf = document.getElementById("create_folder");
         let nf = document.getElementById("new_folder");

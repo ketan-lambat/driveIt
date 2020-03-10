@@ -136,8 +136,13 @@ def file_upload_view(request, path):
         parent = get_parent(request.user, path)
     except ValueError:
         return HttpResponse("Not found")
-
-    f = request.POST['file']
+    print(request.POST)
+    try:
+        f = request.FILES['file']
+    except:
+        return HttpResponse("Unable to process file")
+    if File.objects.filter(name=f.name, location=parent).count() > 0:
+        return HttpResponse("A file with that name already exists.")
     file = File.objects.create(name=f.name, file_size=f.size / 1024,
                                author=request.user, file=request.FILES['file'],
                                location=parent)
@@ -155,6 +160,8 @@ def create_folder_view(request, path):
         f_name = request.POST['folder_name']
     except:
         return HttpResponse("Enter Folder Name")
+    if Folder.objects.filter(name=f_name, location=parent).count() > 0:
+        return HttpResponse("Folder Already Exists")
     folder = Folder.objects.create(name=f_name, author=request.user, location=parent)
     return redirect('folder_data', path=folder.urlpath)
 
