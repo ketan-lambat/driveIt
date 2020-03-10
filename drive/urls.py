@@ -19,11 +19,11 @@ from django.conf.urls.static import static
 from django.urls import path, include
 
 urlpatterns = [
-	path('upload/', include('drive_data.urls')),
-	path('registration/', include('registration.urls')),
-	path('accounts/', include('accounts.urls')),
-	path('admin/', admin.site.urls),
+    path('', include('registration.urls')),
+    path('drive/', include('drive_data.urls')),
+    # path('', include('accounts.urls')),
+    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:
-	urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

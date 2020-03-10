@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.http.response import HttpResponseBadRequest, HttpResponse
+from django.contrib.auth import authenticate, login as auth_login
 
 
 def index_view(request):
@@ -22,3 +24,16 @@ def register_view(request):
 		form = UserCreationForm()
 
 	return render(request, 'registration/register.html', {'form': form})
+
+
+def login_view(request):
+	if request.method == 'POST':
+		try:
+			username, password = request.POST.get('username'), request.POST.get('password')
+		except:
+			return HttpResponseBadRequest()
+		user = authenticate(request, username=username, password=password)
+		if not user:
+			return HttpResponse('Unable to login.')
+		auth_login(request, user)
+		return redirect('dashboard')
