@@ -106,7 +106,7 @@
                 <td><a href="{{ file.file.url }}" target="_blank">{{ file.name }}</a></td>
                 <td> {{ file.file_size }} KB</td>
                 <td>
-                    <!-- <form method="post" action="{% url 'delete_file' file.pk %}"> -->
+{#                     <form method="post" action="{% url 'delete_file' file.pk %}"> #}
                     <form>
                         {% csrf_token %}
                         <button type="submit" class="btn-small red"> Delete</button>
