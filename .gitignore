@@ -137,3 +137,8 @@ dmypy.json
 
 # credentials
 secret_credentials/
+
+#media folder
+media/
+!media/default_user.png
+!media/uploads/IIIT_Sri_City_Logo_circle.png
