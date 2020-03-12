@@ -146,6 +146,8 @@ def file_upload_view(request, path):
     file = File.objects.create(name=f.name, file_size=f.size / 1024,
                                author=request.user, file=request.FILES['file'],
                                location=parent)
+    if parent == request.user.drive:
+        return redirect('drive_home')
     return redirect('folder_data', path=path)
 
 
