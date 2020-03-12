@@ -66,8 +66,7 @@
             if (nfn.value === '') {
                 nfn.placeholder = "Folder Name cannot be Empty";
                 nfn.classList.add("empty-data");
-            }
-            else{
+            } else {
                 nfn.placeholder = "Folder Name";
                 nfn.classList.remove("empty-data");
             }
@@ -90,7 +89,8 @@
         <tbody>
         {% for folder in folders %}
             <tr>
-                <td><a href="{% url 'folder_data' path=folder.urlpath %}">{{ folder.name }}</a></td>
+                <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
+                        class="material-icons left">folder</i>{{ folder.name }}</a></td>
                 <td> {{ folder.size }} KB</td>
                 <td>
                     {#                 <form method="post" action="{% url 'delete_file' file.pk %}">#}
@@ -103,10 +103,11 @@
         {% endfor %}
         {% for file in files %}
             <tr>
-                <td><a href="{{ file.file.url }}" target="_blank">{{ file.name }}</a></td>
+                <td><a href="{{ file.file.url }}" target="_blank">
+                    <i class="material-icons left">insert_drive_file</i>{{ file.name }}</a></td>
                 <td> {{ file.file_size }} KB</td>
                 <td>
-{#                     <form method="post" action="{% url 'delete_file' file.pk %}"> #}
+                    {#                     <form method="post" action="{% url 'delete_file' file.pk %}"> #}
                     <form>
                         {% csrf_token %}
                         <button type="submit" class="btn-small red"> Delete</button>
