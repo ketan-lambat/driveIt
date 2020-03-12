@@ -139,7 +139,7 @@ dmypy.json
 secret_credentials/
 
 #media folder
-media/
-media/uploads
+media/*
+media/uploads/*
 !media/default_user.png
-!media/uploads/IIIT_Sri_City_Logo_circle.png
+!media/uploads/default_user.png
