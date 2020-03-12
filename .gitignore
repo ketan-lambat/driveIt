@@ -142,4 +142,4 @@ secret_credentials/
 media/
 media/uploads
 !media/default_user.png
-!media/uploads/IIIT_Sri_City_Logo_circle.png
+!media/uploads/default_user.png
