@@ -39,7 +39,7 @@ class Folder(Item):
 
     @property
     def size(self):
-        return sum(map(lambda x: x.size, self.files_folder.all()))
+        return sum(map(lambda x: x.size, self.files_folder.all())) + sum(map(lambda x: x.file_size, self.files.all()))
 
     @property
     def urlpath(self):
