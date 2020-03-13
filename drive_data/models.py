@@ -23,7 +23,7 @@ class File(Item):
     file = models.FileField(upload_to='uploads/', null=False, default=None)
     file_extension = models.CharField(max_length=10)
     file_type = models.CharField(max_length=20)
-    file_size = models.DecimalField(max_digits=10, decimal_places=3, validators=[MinValueValidator(0.01)])
+    file_size = models.DecimalField(max_digits=99, decimal_places=90, validators=[MinValueValidator(0.01)])
     location = models.ForeignKey("Folder", on_delete=models.CASCADE, related_name="files")
 
     def __str__(self):

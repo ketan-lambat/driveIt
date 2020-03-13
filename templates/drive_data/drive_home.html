@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}My Drive{% endblock %}
 {% block body %}
-
+    {% load humanize %}
     <h2>Welcome, {{ request.user.first_name }}</h2>
     <p>
     <form id="file_upload_form" method="post" action="{% url 'file_upload_view' path=current_path %}"
@@ -91,7 +91,7 @@
             <tr>
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
-                <td> {{ folder.size }} KB</td>
+                <td> {{ folder.size|filesizeformat  }} </td>
                 <td>
                      <form method="post" action="{% url 'delete_folder' folder.pk %}">
                         {% csrf_token %}
@@ -104,7 +104,7 @@
             <tr>
                 <td><a href="{{ file.file.url }}" target="_blank">
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}</a></td>
-                <td> {{ file.file_size }} KB</td>
+                <td> {{ file.file_size|filesizeformat  }} </td>
                 <td>
                     <form method="post" action="{% url 'delete_file' file.pk %}">
                         {% csrf_token %}

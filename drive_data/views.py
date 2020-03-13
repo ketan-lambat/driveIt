@@ -10,6 +10,7 @@ from .forms import UploadFileForm
 from .models import FileTest
 from registration.models import User
 from .models import File, Folder
+import humanize
 
 
 class Home(TemplateView):
@@ -143,7 +144,7 @@ def file_upload_view(request, path):
 		return HttpResponse("Unable to process file")
 	if File.objects.filter(name=f.name, location=parent).count() > 0:
 		return HttpResponse("A file with that name already exists.")
-	file = File.objects.create(name=f.name, file_size=f.size / 1024,
+	file = File.objects.create(name=f.name, file_size=f.size,
 							   author=request.user, file=request.FILES['file'],
 							   location=parent)
 	if parent == request.user.drive:
