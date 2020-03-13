@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 	'accounts',
 	'drive_data',
 	'crispy_forms',
+	'django_cleanup',  # for file/folder delete
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -125,4 +126,4 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'registration.User'
 
-LOGIN_REDIRECT_URL = '/accounts/dashboard/'
+LOGIN_REDIRECT_URL = '/drive/'

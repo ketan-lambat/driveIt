@@ -2,9 +2,9 @@
 {% block title %}My Drive{% endblock %}
 {% block head %}
     <style>
-    .empty-data::placeholder{
-        color: red;
-    }
+        .empty-data::placeholder {
+            color: red;
+        }
     </style>
 {% endblock %}
 {% block body %}
@@ -73,8 +73,7 @@
             if (nfn.value === '') {
                 nfn.placeholder = "Folder Name cannot be Empty";
                 nfn.classList.add("empty-data");
-            }
-            else{
+            } else {
                 nfn.placeholder = "Folder Name";
                 nfn.classList.remove("empty-data");
             }
@@ -103,8 +102,7 @@
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
                 <td> {{ folder.size }} KB</td>
                 <td>
-                    {#                 <form method="post" action="{% url 'delete_file' file.pk %}">#}
-                    <form>
+                    <form method="post" action="{% url 'delete_folder' folder.pk %}">
                         {% csrf_token %}
                         <button type="submit" class="btn-small red"> Delete</button>
                     </form>
@@ -117,11 +115,11 @@
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}</a></td>
                 <td> {{ file.file_size }} KB</td>
                 <td>
-                    {#                     <form method="post" action="{% url 'delete_file' file.pk %}"> #}
-                    <form>
+                    <form method="post" action="{% url 'delete_file' file.pk %}">
                         {% csrf_token %}
                         <button type="submit" class="btn-small red"> Delete</button>
                     </form>
+
                 </td>
             </tr>
         {% endfor %}
