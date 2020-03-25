@@ -9,22 +9,25 @@
     {% endblock %}
 </head>
 <body>
-{% block content %}
-    {% if user.is_authenticated %}
-        <h1>Welcome, {{ user.username }}</h1>
-        <a href="{% url 'drive_home' %}">Go To Drive</a>
-        <br>
-        <a href="{% url 'logout' %}">Logout</a>
+<div class="container">
+    <br>
+    {% block content %}
+        {% if user.is_authenticated %}
+            <h1>Welcome, {{ user.username }}</h1>
+            <a href="{% url 'drive_home' %}">Go To Drive</a>
+            <br>
+            <a href="{% url 'logout' %}">Logout</a>
 
-    {% else %}
+        {% else %}
 
-        <h1> Welcome Home, from homepage</h1><i class="fa fa-user icon"></i>
-        <a href="{% url 'login_url' %}"><i class="fa fa-user icon"></i> Login</a>
-        <a href="{% url 'register_url' %}">Register</a>
+            <h1> Welcome Guest, to TDrive</h1><i class="fa fa-user icon"></i>
+            <a href="{% url 'login_url' %}"><i class="fa fa-user icon"></i> Login</a> <br>
+            <a href="{% url 'register_url' %}">Register</a>
 
-    {% endif %}
+        {% endif %}
 
-{% endblock %}
+    {% endblock %}
+</div>
 
 </body>
 </html>
