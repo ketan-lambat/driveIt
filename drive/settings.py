@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import django_heroku
 from dotenv import load_dotenv
 from pathlib import Path
 from django.contrib.messages import constants as messages
@@ -159,3 +160,6 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 EMAIL_TIMEOUT = 300
 
 URL = 'http://localhost:8000'
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
