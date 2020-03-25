@@ -143,3 +143,6 @@ media/*
 media/uploads/*
 !media/default_user.png
 !media/uploads/default_user.png
+
+#deployement
+staticfiles/
