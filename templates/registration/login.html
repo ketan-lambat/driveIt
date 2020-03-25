@@ -1,10 +1,35 @@
 {% extends 'registration/index.html' %}
-
+{% block title %}
+    Register | TDrive
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+        div.ex2 {
+            text-align: center;
+            color: black;
+        }
+    </style>
+{% endblock %}
 {% block content %}
-        <h1>System Login</h1>
-        <form method = "POST">
-        {% csrf_token %}
-             {{ form.as_p }}
-            <button type="submit">Login</button>
-        </form>
+    <div class="ex2"><br><br><br><br><br><br><br><br>
+        <div class="container">
+            <div class='col-sm-6 col-sm-offset-3'>
+                <div class='panel panel-default'>
+                    <div class='panel-heading'>Login</div>
+                    <div class='panel-body'>
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit"> Login</button>
+                        </form>
+                        <p><a href="#">forget password?</a></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
