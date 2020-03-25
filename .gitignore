@@ -147,3 +147,6 @@ media/uploads/*
 
 #deployement
 staticfiles/
+
+# keys
+.coveralls.yml
