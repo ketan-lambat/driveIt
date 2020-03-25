@@ -2,22 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simple Auth System</title>
+    <title>{% block title %}TDrive{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     {% block head %}
     {% endblock %}
 </head>
 <body>
-{% block content %}
-    <h1> Welcome Home, from homepage</h1>
-    {% if user.is_authenticated %}
-        <a href="{% url 'logout' %}">Logout</a>
+<div class="container">
+    <br>
+    {% block content %}
+        {% if user.is_authenticated %}
+            <h1>Welcome, {{ user.username }}</h1>
+            <a href="{% url 'drive_home' %}">Go To Drive</a>
+            <br>
+            <a href="{% url 'logout' %}">Logout</a>
 
-    {% else %}
-        <a href="{% url 'login_url' %}">Login</a>
-        <a href="{% url 'register_url' %}">Register</a>
+        {% else %}
 
-    {% endif %}
+            <h1> Welcome Guest, to TDrive</h1><i class="fa fa-user icon"></i>
+            <a href="{% url 'login_url' %}"><i class="fa fa-user icon"></i> Login</a> <br>
+            <a href="{% url 'register_url' %}">Register</a>
 
-{% endblock %}
+        {% endif %}
+
+    {% endblock %}
+</div>
+
 </body>
 </html>

@@ -91,9 +91,9 @@
             <tr>
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
-                <td> {{ folder.size|filesizeformat  }} </td>
+                <td> {{ folder.size|filesizeformat }} </td>
                 <td>
-                     <form method="post" action="{% url 'delete_folder' folder.pk %}">
+                    <form method="post" action="{% url 'delete_folder' folder.pk %}">
                         {% csrf_token %}
                         <button type="submit" class="btn-small red"> Delete</button>
                     </form>
@@ -104,7 +104,7 @@
             <tr>
                 <td><a href="{{ file.file.url }}" target="_blank">
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}</a></td>
-                <td> {{ file.file_size|filesizeformat  }} </td>
+                <td> {{ file.file_size|filesizeformat }} </td>
                 <td>
                     <form method="post" action="{% url 'delete_file' file.pk %}">
                         {% csrf_token %}
