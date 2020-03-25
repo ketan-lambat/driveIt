@@ -40,7 +40,7 @@ class DashboardPageTest(TestCase):
 
 	def test_root_title(self):
 		response = self.client.get('/')
-		self.assertContains(response, "<title>Drive Login</title>")
+		self.assertContains(response, "<title>TDrive</title>")
 
 	def test_root_template(self):
 		response = self.client.get('/')
@@ -54,4 +54,4 @@ class LoginPageTest(TestCase):
 
 	def test_root_title(self):
 		response = self.client.get('/login/')
-		self.assertContains(response, "<title>Drive Login</title>")
+		self.assertContains(response, "<title>Login | TDrive</title>")
