@@ -2,18 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simple Auth System</title>
+    <title>Drive Login</title>
     {% block head %}
     {% endblock %}
 </head>
 <body>
 {% block content %}
-    <h1> Welcome Home, from homepage</h1>
     {% if user.is_authenticated %}
+    <h1> Welcome {{ user.username }}, from homepage</h1>
         <a href="{% url 'logout' %}">Logout</a>
 
     {% else %}
+        <h4>Existing User</h4>
         <a href="{% url 'login_url' %}">Login</a>
+        <h4>First Time Here</h4>
         <a href="{% url 'register_url' %}">Register</a>
 
     {% endif %}
