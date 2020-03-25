@@ -12,6 +12,7 @@ before_script:
   - python manage.py check
   - python manage.py makemigrations
   - python manage.py migrate
+  - mysql -e 'create database test;' -u root
 
 # command to run tests
 script:
