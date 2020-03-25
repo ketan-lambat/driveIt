@@ -90,7 +90,7 @@ class UploadFileVIew(CreateView):
 # Final Drive Views:
 
 
-class DriveDataView(View, LoginRequiredMixin):
+class DriveDataView(LoginRequiredMixin, View):
 	def get(self, request):
 		context = dict()
 		drive = request.user.drive
@@ -99,7 +99,7 @@ class DriveDataView(View, LoginRequiredMixin):
 		return render(request, 'drive_data/drive_home.html', context=context)
 
 
-class FolderDataView(View, LoginRequiredMixin):
+class FolderDataView(LoginRequiredMixin, View):
 	def get(self, request, path):
 		path = path.split('/')
 		user = request.user
