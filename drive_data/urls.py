@@ -9,8 +9,8 @@ urlpatterns = [
 	# Make Sure to put regex path below other paths
 	# otherwise re_path will consume the request
 	# leading to a HTTP 405 Error or "Not Found" message
-	re_path(r'^(?P<path>[-a-zA-Z0-9%/]*)/upload/$', views.file_upload_view, name='file_upload_view'),
-	re_path(r'^(?P<path>[a-zA-Z0-9%/]*)/create_folder/$', views.create_folder_view, name='create_folder_view'),
+	re_path(r'^upload/(?P<path>[-a-zA-Z0-9%/]*)$', views.file_upload_view, name='file_upload_view'),
+	re_path(r'^create_folder/(?P<path>[a-zA-Z0-9%/]*)$', views.create_folder_view, name='create_folder_view'),
 	re_path(r'^(?P<path>[a-zA-Z0-9%/]*)/$', views.FolderDataView.as_view(), name='folder_data'),
 ]
 
