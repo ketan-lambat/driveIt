@@ -1,10 +1,37 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import resolve
+from django.contrib import auth
+# from django.contrib.auth.models import User
+from .models import User
 from django.http import HttpRequest
-from .views import index_view
+from .views import index_view, dashboard_view
+
+
+class UserLoggedInTest(TestCase):
+
+	def test_create_user(self):
+		user = User.objects.create_user(username="testuser", password="test.pass")
+		self.assertEqual(user.username, "testuser")
+		self.assertTrue(user.is_active)
+		self.assertFalse(user.is_staff)
+		self.assertFalse(user.is_superuser)
+
+	def test_create_superuser(self):
+		admin_user = User.objects.create_superuser(username="admin", password="admin.pass")
+		self.assertEqual(admin_user.username, "admin")
+		self.assertTrue(admin_user.is_active)
+		self.assertTrue(admin_user.is_staff)
+		self.assertTrue(admin_user.is_superuser)
 
 
 class RegistrationPageTest(TestCase):
+
+	def setUp(self):
+		self.user = User.objects.create_user(username="testuser", password="test.pass")
+		self.response = self.client.login(username="testuser", password="test.pass")
+
+	def test_user_logged_in(self):
+		assert self.user.is_authenticated
 
 	def test_root_url(self):
 		response = self.client.get('/')
@@ -12,10 +39,12 @@ class RegistrationPageTest(TestCase):
 
 	def test_root_url_resolves_to_home_page(self):
 		found_url = resolve('/')
-		self.assertEqual(found_url.func, index_view)
+		self.assertEqual(found_url.func, dashboard_view)
 
 	def test_root_title(self):
 		response = self.client.get('/')
 		self.assertContains(response, "<title>Simple Auth System</title>")
-		self.assertTemplateUsed(response, "registration/index.html")
 
+	def test_root_template(self):
+		response = self.client.get('/')
+		self.assertTemplateUsed(response, "registration/dashboard.html")
