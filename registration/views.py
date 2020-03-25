@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode as b64_encode, urlsafe_base64_decode as b64_decode
 
 from mail import send_mail
-from .forms import UserRegistrationForm
+from .forms import CreateUserForm
 from .models import User
 from .tokens import registration_token_generator
 
@@ -24,7 +24,7 @@ def dashboard_view(request):
 
 def register_view(request):
     if request.method == "POST":
-        form = UserRegistrationForm(request.POST)
+        form = CreateUserForm(request.POST)
         if form.is_valid():
             u = form.save()
             user_token = registration_token_generator.make_token(u)
@@ -37,7 +37,7 @@ def register_view(request):
             messages.info(request, "Account Activation link mailed.", fail_silently=True)
             return redirect('dashboard')
     else:
-        form = UserRegistrationForm()
+        form = CreateUserForm()
 
     return render(request, 'registration/register.html', {'form': form})
 
