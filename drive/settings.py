@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 from django.contrib.messages import constants as messages
 
-env_path = Path('.')/'.env'
+env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path, verbose=True)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +32,7 @@ SECRET_KEY = '$8retar9et1o5js)()&!i5ltwy8jjs0qq4&(rp!*j@noz4cb@p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'tdrive.pythonanywhere.com']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'tdrive.pythonanywhere.com', 'sleepy-plateau-81738.herokuapp.com']
 
 # Application definition
 
