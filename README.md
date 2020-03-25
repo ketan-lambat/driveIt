@@ -23,6 +23,18 @@ Ubuntu/Linux
 source env/bin/activate
 ```
 
+## Making a new branch
+```bash
+git checkout -b <branch-name>
+```
+branch-name : can be your name 
+
+For Pushing Changes
+```bash
+git push -u origin <branch-name>
+```
+
+
 ## Version Control Workflow
 > After making any changes, follow these steps before pushing to the repo.
 1. git add .
