@@ -27,7 +27,7 @@ SECRET_KEY = '$8retar9et1o5js)()&!i5ltwy8jjs0qq4&(rp!*j@noz4cb@p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'tdrive.pythonanywhere.com']
 
 # Application definition
 
