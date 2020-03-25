@@ -7,7 +7,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.http import urlsafe_base64_encode as b64_encode, urlsafe_base64_decode as b64_decode
 
-from mail import send_mail
+# from mail import send_mail
+from django.core.mail import send_mail
 from .forms import CreateUserForm
 from .models import User
 from .tokens import registration_token_generator
@@ -33,9 +34,14 @@ def register_view(request):
             text = "Dear User,\n" + \
                    "Please open the link given below to verify your email for DriveIt account. \n" + url + \
                    "\nIf you did not request registration for DriveIt then please ignore this email."
-            send_mail("Email Verification for DriveIt", text, text, [u.email], fail_silently=False)
+            send_mail(subject="Email Verification for DriveIt",
+                      html_message=text, message=text,
+                      recipient_list=[u.email],
+                      from_email=settings.DEFAULT_FROM_EMAIL,
+                      fail_silently=False)
             messages.info(request, "Account Activation link mailed.", fail_silently=True)
             return redirect('drive_home')
+
     else:
         form = CreateUserForm()
 
