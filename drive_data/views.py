@@ -14,7 +14,7 @@ import humanize
 
 
 class Home(TemplateView):
-	template_name = 'base.html'
+	template_name = 'basic.html'
 
 
 def upload(request):
