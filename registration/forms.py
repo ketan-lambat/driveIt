@@ -1,8 +1,8 @@
 from django import forms
-from django.db import models
-from registration.models import User
 from django.contrib.auth import password_validation
-from django.utils.translation import gettext, gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
+
+from registration.models import User
 
 
 class CreateUserForm(forms.ModelForm):
@@ -57,6 +57,7 @@ class CreateUserForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
+        user.is_active = False
         if commit:
             user.save()
         return user

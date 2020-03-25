@@ -1,20 +1,19 @@
-from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView, CreateView, View
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.utils.http import urlquote as urlencode, urlunquote as urldecode
-from django.http import HttpResponse, Http404
+from django.utils.http import urlunquote as urldecode
+from django.views.generic import TemplateView, ListView, CreateView, View
+
 from .forms import UploadFileForm
-from .models import FileTest
-from registration.models import User
 from .models import File, Folder
-import humanize
+from .models import FileTest
 
 
 class Home(TemplateView):
-    template_name = 'base.html'
+    template_name = 'basic.html'
 
 
 def upload(request):

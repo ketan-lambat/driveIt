@@ -11,7 +11,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
+from pathlib import Path
+from django.contrib.messages import constants as messages
 
+env_path = Path('.')/'.env'
+load_dotenv(dotenv_path=env_path, verbose=True)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -128,5 +133,27 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'registration.User'
 
 LOGIN_REDIRECT_URL = '/drive/'
+LOGOUT_REDIRECT_URL = '/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+
+MESSAGE_TAGS = {
+	messages.INFO: 'light-blue lighten-2',
+	messages.WARNING: 'orange lighten-2',
+	messages.ERROR: 'red darken-4',
+	messages.SUCCESS: 'green lighten-1'
+}
+
+REGISTRATION_RESET_TIMEOUT = 1800
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = (os.getenv('EMAIL_PORT'))
+# EMAIL_PORT = os.getenv('DJANGO_EMAIL_PORT', 587)
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = (os.getenv('EMAIL_USE_TLS') == 'True')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
+EMAIL_TIMEOUT = 300
+
+URL = 'http://localhost:8000'
