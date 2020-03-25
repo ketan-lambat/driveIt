@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     {% block head %} {% endblock %}
 </head>
+<body>
 <div class="container">
     {% block body %}
 
@@ -16,4 +17,13 @@
 </div>
 <div style="height: 5vw">
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+{% if messages %}
+    <script>
+        {% for message in messages %}
+            M.toast({html: {{message}}{% if message.tags %}, classes: {{ message.tags }}{% endif %}});
+        {% endfor %}
+    </script>
+{% endif %}
+</body>
 </html>
