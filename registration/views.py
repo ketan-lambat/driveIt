@@ -35,7 +35,7 @@ def register_view(request):
                    "\nIf you did not request registration for DriveIt then please ignore this email."
             send_mail("Email Verification for DriveIt", text, text, [u.email])
             messages.info(request, "Account Activation link mailed.", fail_silently=True)
-            return redirect('dashboard')
+            return redirect('drive_home')
     else:
         form = CreateUserForm()
 
@@ -66,4 +66,4 @@ def login_view(request):
         if not user:
             return HttpResponse('Unable to login.')
         auth_login(request, user)
-        return redirect('dashboard')
+        return redirect('drive_home')
