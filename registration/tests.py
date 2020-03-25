@@ -34,9 +34,9 @@ class DashboardPageTest(TestCase):
 		response = self.client.get('/')
 		self.assertEqual(response.status_code, 200)
 
-	def test_root_url_resolves_to_home_page(self):
-		found_url = resolve('/')
-		self.assertEqual(found_url.func, dashboard_view)
+	def test_root_url_view(self):
+		dashboard_url = resolve('/')
+		self.assertEqual(dashboard_url.func, dashboard_view)
 
 	def test_root_title(self):
 		response = self.client.get('/')
