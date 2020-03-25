@@ -1,9 +1,6 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import resolve
-from django.contrib import auth
-# from django.contrib.auth.models import User
 from .models import User
-from django.http import HttpRequest
 from .views import index_view, dashboard_view
 
 
@@ -24,7 +21,7 @@ class UserLoggedInTest(TestCase):
 		self.assertTrue(admin_user.is_superuser)
 
 
-class RegistrationPageTest(TestCase):
+class DashboardPageTest(TestCase):
 
 	def setUp(self):
 		self.user = User.objects.create_user(username="testuser", password="test.pass")
@@ -48,3 +45,13 @@ class RegistrationPageTest(TestCase):
 	def test_root_template(self):
 		response = self.client.get('/')
 		self.assertTemplateUsed(response, "registration/dashboard.html")
+
+
+class LoginPageTest(TestCase):
+	def test_login_url(self):
+		response = self.client.get('/login/')
+		self.assertEqual(response.status_code, 200)
+
+	def test_root_title(self):
+		response = self.client.get('/login/')
+		self.assertContains(response, "<title>Simple Auth System</title>")
