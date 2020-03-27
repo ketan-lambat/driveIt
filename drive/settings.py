@@ -131,6 +131,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
 
 AUTH_USER_MODEL = 'registration.User'
 
@@ -139,7 +144,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_URL = '/login/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+
 
 MESSAGE_TAGS = {
 	messages.INFO: 'light-blue lighten-2',
@@ -167,4 +172,4 @@ db_from_env = dj_database_url.config(conn_max_age=3600)
 DATABASES['default'].update(db_from_env)
 
 # Activate Django-Heroku.
-django_heroku.settings(locals())
+# django_heroku.settings(locals())

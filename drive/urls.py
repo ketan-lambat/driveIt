@@ -19,10 +19,11 @@ from django.conf.urls.static import static
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include('registration.urls')),
-    path('drive/', include('drive_data.urls')),
-    # path('', include('accounts.urls')),
-    path('admin/', admin.site.urls),
-]
+				  path('', include('registration.urls')),
+				  path('drive/', include('drive_data.urls')),
+				  # path('', include('accounts.urls')),
+				  path('admin/', admin.site.urls),
+			  ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+# https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
