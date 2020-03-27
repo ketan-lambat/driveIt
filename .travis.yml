@@ -15,7 +15,7 @@ before_script:
 
 # command to run tests
 script:
-  - coverage run --source=accounts, base, drive_data, registration manage.py test
+  - coverage run --source=accounts,base,drive_data,registration manage.py test
 
 after_success:
   - coveralls
