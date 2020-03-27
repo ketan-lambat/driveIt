@@ -11,11 +11,13 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import django_heroku
+import dj_database_url
 from dotenv import load_dotenv
 from pathlib import Path
 from django.contrib.messages import constants as messages
 
-env_path = Path('.')/'.env'
+env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path, verbose=True)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +34,7 @@ SECRET_KEY = '$8retar9et1o5js)()&!i5ltwy8jjs0qq4&(rp!*j@noz4cb@p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'tdrive.pythonanywhere.com']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'tdrive.pythonanywhere.com', 'sleepy-plateau-81738.herokuapp.com']
 
 # Application definition
 
@@ -163,4 +165,11 @@ EMAIL_USE_TLS = (os.getenv('EMAIL_USE_TLS') == 'True')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 EMAIL_TIMEOUT = 300
 
+# URL = 'http://localhost:8000'
 URL = os.getenv('URL')
+
+db_from_env = dj_database_url.config(conn_max_age=3600)
+DATABASES['default'].update(db_from_env)
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())

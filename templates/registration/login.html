@@ -4,7 +4,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
     <style>
+    body {
+            background-image: url("download/image.jpg");
+             background-size: cover;
+             background-attachment: fixed;
+         }
         div.ex2 {
             text-align: center;
             color: black;
@@ -22,9 +28,11 @@
                             {% csrf_token %}
                             {{ form.as_p }}
                             <button type="submit"> Login</button>
-                        </form>
-                        <p><a href="#">forget password?</a></p>
 
+                        </form>
+                        <label><input name="remember_me" type="checkbox">Keep me logged in</label>
+                        <p><a href="#">forget password?</a></p>
+                        <p><a href="/register/">Create account</a></p>
                     </div>
                 </div>
             </div>
