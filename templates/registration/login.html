@@ -1,57 +1,35 @@
-{#{% extends 'registration/index.html' %}#}
-<title>{% block title %}Login | TDrive{% endblock %}</title>
-<head>
-{#{% block head %}#}
-{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
-{#<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"#}
-{#          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">#}
-{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">#}
-{#<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">#}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-{#<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">#}
-{#<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>#}
-{#    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>#}
-{#    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>#}
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
+{% extends 'registration/index.html' %}
+{% block title %}Login | TDrive{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-
-{#    <div><img src="media/2.png" /></div>#}
-    {% block head %}
     <style>
     @import url('https://fonts.googleapis.com/css?family=Numans');
-   html, body{
+    html, body{
         background-image: url("http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg");
-
-background-size: cover;
-background-repeat: no-repeat;
-height: 100%;
-font-family: 'Numans', sans-serif;
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100%;
+        font-family: 'Numans', sans-serif;
     }
         div.ex2 {
             text-align: center;
             color: black;
-            {#background-image: url("registration/image3.jpg");#}
-            {#background-color: #79aec8;#}
         }
     </style>
 {% endblock %}
-</head>
-<body>
 {% block content %}
-{#    <div><img src="media/2.png" /></div>#}
     <div class="ex2"><br><br><br><br><br><br><br><br>
         <div class="container">
             <div class='col-sm-6 col-sm-offset-3'>
                 <div class='panel panel-default'>
                     <div class='panel-heading'>Login</div>
                     <div class='panel-body'>
-{#                        <div><img src="media/2.png" /></div>#}
                         <form method="POST">
                             {% csrf_token %}
                             {{ form.as_p }}
-                            <button class="btn btn-primary" type="submit">Login</button>
-
+                            <button type="submit"> Login</button>
                         </form>
                         <label><input name="remember_me" type="checkbox">Keep me logged in</label>
                         <p><a href="#">forget password?</a></p>
@@ -62,4 +40,3 @@ font-family: 'Numans', sans-serif;
         </div>
     </div>
 {% endblock %}
-</body>
