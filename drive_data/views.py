@@ -33,16 +33,18 @@ class FolderDataView(LoginRequiredMixin, View):
         parent = Folder.objects.get(drive_user=user)
         paths = []
         for i in range(len(path)):
-            paths.append((urldecode(path[i]), '/'.join(path[:i + 1])))
+            paths.append((urldecode(path[i]), '/'.join(path[: i + 1])))
         for folder in map(urldecode, path):
             try:
                 parent = parent.files_folder.get(name=folder)
             except:
                 return HttpResponse("Not found")
-        context = {'files': parent.files.all(),
-                   'folders': parent.files_folder.all(),
-                   'paths': paths,
-                   'current_path': '/'.join(path)}
+        context = {
+            'files': parent.files.all(),
+            'folders': parent.files_folder.all(),
+            'paths': paths,
+            'current_path': '/'.join(path),
+        }
 
         return render(request, 'drive_data/folder_data.html', context=context)
 
@@ -71,9 +73,13 @@ def file_upload_view(request, path):
         return HttpResponse("Unable to process file")
     if File.objects.filter(name=f.name, location=parent).count() > 0:
         return HttpResponse("A file with that name already exists.")
-    file = File.objects.create(name=f.name, file_size=f.size,
-                               author=request.user, file=request.FILES['file'],
-                               location=parent)
+    file = File.objects.create(
+        name=f.name,
+        file_size=f.size,
+        author=request.user,
+        file=request.FILES['file'],
+        location=parent,
+    )
     if parent == request.user.drive:
         return redirect('drive_home')
     return redirect('folder_data', path=path)
@@ -92,7 +98,9 @@ def create_folder_view(request, path):
         return HttpResponse("Enter Folder Name")
     if Folder.objects.filter(name=f_name, location=parent).count() > 0:
         return HttpResponse("Folder Already Exists")
-    folder = Folder.objects.create(name=f_name, author=request.user, location=parent)
+    folder = Folder.objects.create(
+        name=f_name, author=request.user, location=parent
+    )
     return redirect('folder_data', path=folder.urlpath)
 
 

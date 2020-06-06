@@ -8,7 +8,14 @@ from registration.models import User
 class CreateUserForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ["username", "first_name", "last_name", "email", "password1", "password2"]
+        fields = [
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "password1",
+            "password2",
+        ]
 
     error_messages = {
         'password_mismatch': _('The two password fields didn’t match.'),
@@ -31,7 +38,9 @@ class CreateUserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self._meta.model.USERNAME_FIELD in self.fields:
-            self.fields[self._meta.model.USERNAME_FIELD].widget.attrs['autofocus'] = True
+            self.fields[self._meta.model.USERNAME_FIELD].widget.attrs[
+                'autofocus'
+            ] = True
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
