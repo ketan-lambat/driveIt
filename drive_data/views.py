@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.utils.http import urlunquote as urldecode
 from django.views.generic import TemplateView, ListView, CreateView, View
 
-from .models import File, Folder
+from drive_data.models import File, Folder
 
 
 class Home(TemplateView):
@@ -77,7 +77,7 @@ def file_upload_view(request, path):
         name=f.name,
         file_size=f.size,
         author=request.user,
-        file=request.FILES['file'],
+        file=f,
         location=parent,
     )
     if parent == request.user.drive:

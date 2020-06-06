@@ -19,7 +19,7 @@ class Item(models.Model):
 
 class File(Item):
     file = models.FileField(
-        upload_to='uploads/', null=False, default=None, name='file_file'
+        upload_to='uploads/', null=False, default=None
     )
     file_extension = models.CharField(max_length=10)
     file_type = models.CharField(max_length=20)
@@ -33,8 +33,14 @@ class File(Item):
     def __str__(self):
         return self.name
 
+    class Meta:
+        default_related_name = 'drive_file'
+
 
 class Folder(Item):
+    class Meta:
+        default_related_name = 'drive_folder'
+
     location = models.ForeignKey(
         "Folder",
         on_delete=models.CASCADE,
