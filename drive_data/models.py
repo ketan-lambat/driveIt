@@ -15,12 +15,12 @@ class Item(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # to allow inheritance
-    class Meta:
-        abstract = True
+    # class Meta:
+    #     abstract = True
 
 
 class File(Item):
-    file = models.FileField(upload_to='uploads/', null=False, default=None)
+    file = models.FileField(upload_to='uploads/', null=False, default=None, name='file_file')
     file_extension = models.CharField(max_length=10)
     file_type = models.CharField(max_length=20)
     file_size = models.DecimalField(max_digits=99, decimal_places=90, validators=[MinValueValidator(0.01)])
@@ -52,17 +52,6 @@ class Folder(Item):
 
     def __str__(self):
         return self.name
-
-
-class FileTest(models.Model):
-    file = models.FileField(upload_to='uploads/', null=False, default=None)
-    name = models.CharField(max_length=257, blank=False, editable=True)
-    size = models.DecimalField(max_digits=10, decimal_places=3, validators=[MinValueValidator(0.01)], blank=False,
-                               default=0.1)
-
-    def delete(self, *args, **kwargs):
-        self.file.delete()
-        super().delete(*args, **kwargs)
 
 
 @receiver(post_save, sender=User)
