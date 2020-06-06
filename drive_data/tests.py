@@ -43,7 +43,7 @@ class DriveBaseTest(TestCase):
         assert self.user.is_authenticated
 
     def test_drive_home_url(self):
-        response = self.client.get('/drive/')
+        response = self.client.get("/drive/")
         self.assertEqual(response.status_code, 200)
 
     ### *** TODO ***
@@ -52,9 +52,9 @@ class DriveBaseTest(TestCase):
     # 	self.assertEqual(drive_home_url.func, DriveDataView.as_view())
 
     def test_drive_home_title(self):
-        response = self.client.get('/drive/')
+        response = self.client.get("/drive/")
         self.assertContains(response, "<title>My Drive</title>")
 
     def test_drive_home_template(self):
-        response = self.client.get('/drive/')
+        response = self.client.get("/drive/")
         self.assertTemplateUsed(response, "drive_data/drive_home.html")

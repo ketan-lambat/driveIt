@@ -18,9 +18,7 @@ class Item(models.Model):
 
 
 class File(Item):
-    file = models.FileField(
-        upload_to='uploads/', null=False, default=None
-    )
+    file = models.FileField(upload_to="uploads/", null=False, default=None)
     file_extension = models.CharField(max_length=10)
     file_type = models.CharField(max_length=20)
     file_size = models.DecimalField(
@@ -34,12 +32,12 @@ class File(Item):
         return self.name
 
     class Meta:
-        default_related_name = 'drive_file'
+        default_related_name = "drive_file"
 
 
 class Folder(Item):
     class Meta:
-        default_related_name = 'drive_folder'
+        default_related_name = "drive_folder"
 
     location = models.ForeignKey(
         "Folder",
@@ -61,7 +59,7 @@ class Folder(Item):
         while folder.location is not None:
             path.append(urlencode(str(folder.name)))
             folder = folder.location
-        return '/'.join(path[::-1])
+        return "/".join(path[::-1])
 
     def __str__(self):
         return self.name
@@ -69,10 +67,10 @@ class Folder(Item):
 
 @receiver(post_save, sender=User)
 def create_drive(sender, instance, **kwargs):
-    if kwargs.get('created', False):
+    if kwargs.get("created", False):
         drive = Folder.objects.create(
-            name='root',
-            description='This is your root Directory',
+            name="root",
+            description="This is your root Directory",
             author=instance,
             location=None,
         )

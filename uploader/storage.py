@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 from django.core.files import File
 from django.utils.module_loading import import_string
 
-from uploads import signals
+from uploader import signals
 from .settings import TUS_SAVE_HANDLER_CLASS
 
 
@@ -33,13 +33,15 @@ class AbstractUploadSaveHandler(metaclass=ABCMeta):
 
 
 class DefaultSaveHandler(AbstractUploadSaveHandler):
-    destination_file_field = 'uploaded_file'
+    destination_file_field = "uploaded_file"
 
     def handle_save(self):
         # Save temporary field to file field
         file_field = getattr(self.upload, self.destination_file_field)
-        file_field.save(self.upload.filename,
-                        File(open(self.upload.temporary_file_path, 'rb')))
+        file_field.save(
+            self.upload.filename,
+            File(open(self.upload.temporary_file_path, "rb")),
+        )
 
         # Finish upload
         self.finish()

@@ -37,27 +37,27 @@ class DashboardPageTest(TestCase):
         assert self.user.is_authenticated
 
     def test_root_url(self):
-        response = self.client.get('/')
+        response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
 
     def test_root_url_view(self):
-        dashboard_url = resolve('/')
+        dashboard_url = resolve("/")
         self.assertEqual(dashboard_url.func, index_view)
 
     def test_root_title(self):
-        response = self.client.get('/')
+        response = self.client.get("/")
         self.assertContains(response, "<title>TDrive</title>")
 
     def test_root_template(self):
-        response = self.client.get('/')
+        response = self.client.get("/")
         self.assertTemplateUsed(response, "registration/index.html")
 
 
 class LoginPageTest(TestCase):
     def test_login_url(self):
-        response = self.client.get('/login/')
+        response = self.client.get("/login/")
         self.assertEqual(response.status_code, 200)
 
     def test_root_title(self):
-        response = self.client.get('/login/')
+        response = self.client.get("/login/")
         self.assertContains(response, "<title>Login | TDrive</title>")

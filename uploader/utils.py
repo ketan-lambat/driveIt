@@ -10,8 +10,8 @@ def encode_base64_to_string(data):
     Helper to encode a string or bytes value to a base64 string as bytes
     """
     if isinstance(data, str):
-        data = bytes(data, 'utf-8')
-    return encode_base64(data).decode('ascii').rstrip('\n')
+        data = bytes(data, "utf-8")
+    return encode_base64(data).decode("ascii").rstrip("\n")
 
 
 def encode_upload_metadata(upload_metadata):
@@ -22,13 +22,17 @@ def encode_upload_metadata(upload_metadata):
     :return str:
     """
     # Prepare encoded data
-    encoded_data = [(key, encode_base64_to_string(value))
-                    for (key, value) in
-                    sorted(upload_metadata.items(), key=lambda item: item[0])]
+    encoded_data = [
+        (key, encode_base64_to_string(value))
+        for (key, value) in sorted(
+            upload_metadata.items(), key=lambda item: item[0]
+        )
+    ]
 
     # Encode into string
-    return ','.join([' '.join([key, encoded_value]) for key, encoded_value in
-                     encoded_data])
+    return ",".join(
+        [" ".join([key, encoded_value]) for key, encoded_value in encoded_data]
+    )
 
 
 def write_bytes_to_file(file_path, offset, data, makedirs=False):
@@ -51,9 +55,9 @@ def write_bytes_to_file(file_path, offset, data, makedirs=False):
     fh = None
     try:
         try:
-            fh = open(file_path, 'r+b')
+            fh = open(file_path, "r+b")
         except IOError:
-            fh = open(file_path, 'wb')
+            fh = open(file_path, "wb")
         fh.seek(offset, os.SEEK_SET)
         num_bytes_written = fh.write(data)
     finally:
@@ -85,7 +89,7 @@ def read_bytes(path):
     :param str path: The local path to the file to read
     :return bytes: bytes read from the given field_file
     """
-    with open(path, 'r+b') as fh:
+    with open(path, "r+b") as fh:
         result = fh.read()
     return result
 
@@ -100,7 +104,7 @@ def write_chunk_to_temp_file(data):
     fd, chunk_file = tempfile.mkstemp(prefix="tus-upload-chunk-")
     os.close(fd)
 
-    with open(chunk_file, 'wb') as fh:
+    with open(chunk_file, "wb") as fh:
         fh.write(data)
 
     return chunk_file
@@ -128,8 +132,9 @@ def create_checksum_header(data, checksum_algorithm):
     :return str: The checksum algorithm, followed by the checksum (hex)
     """
     checksum = create_checksum(data, checksum_algorithm)
-    return '{checksum_algorithm} {checksum}'.format(
-        checksum_algorithm=checksum_algorithm, checksum=checksum)
+    return "{checksum_algorithm} {checksum}".format(
+        checksum_algorithm=checksum_algorithm, checksum=checksum
+    )
 
 
 def checksum_matches(checksum_algorithm, checksum, data):

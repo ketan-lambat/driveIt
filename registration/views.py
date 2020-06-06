@@ -18,12 +18,12 @@ from .tokens import registration_token_generator
 
 
 def index_view(request):
-    return render(request, 'registration/index.html')
+    return render(request, "registration/index.html")
 
 
 @login_required
 def dashboard_view(request):
-    return render(request, 'registration/dashboard.html')
+    return render(request, "registration/dashboard.html")
 
 
 def register_view(request):
@@ -34,7 +34,7 @@ def register_view(request):
             user_token = registration_token_generator.make_token(u)
             b64id = b64_encode(bytes(str(u.pk).encode()))
             url = settings.URL + reverse(
-                'account_verification', args=[b64id, user_token]
+                "account_verification", args=[b64id, user_token]
             )
             text = (
                 "Dear User,\n"
@@ -58,12 +58,12 @@ def register_view(request):
             messages.info(
                 request, "Account Activation link mailed.", fail_silently=True
             )
-            return redirect('drive_home')
+            return redirect("drive_home")
 
     else:
         form = CreateUserForm()
 
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, "registration/register.html", {"form": form})
 
 
 def verify_account(request, uid, token):
@@ -80,20 +80,20 @@ def verify_account(request, uid, token):
         u.is_active = True
         u.save()
         messages.info(request, "Account Verified", fail_silently=True)
-        return redirect('login_url')
+        return redirect("login_url")
 
 
 def login_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         try:
             username, password = (
-                request.POST.get('username'),
-                request.POST.get('password'),
+                request.POST.get("username"),
+                request.POST.get("password"),
             )
         except KeyError:
             return HttpResponseBadRequest()
         user = authenticate(request, username=username, password=password)
         if not user:
-            return HttpResponse('Unable to login.')
+            return HttpResponse("Unable to login.")
         auth_login(request, user)
-        return redirect('drive_home')
+        return redirect("drive_home")

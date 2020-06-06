@@ -60,7 +60,7 @@ def smtp_send_mass_mail(data_tuples, fail_silently=True):
         message = EmailMultiAlternatives(
             subject, message, from_email, recipient_list
         )
-        message.attach_alternative(html_message, 'text/html')
+        message.attach_alternative(html_message, "text/html")
         messages.append(message)
     try:
         return connection.send_messages(messages)

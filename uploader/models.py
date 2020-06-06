@@ -9,16 +9,17 @@ from django.utils.translation import ugettext_lazy as _
 from django_fsm import FSMField, transition
 from jsonfield import JSONField
 
-from uploads import signals
-from uploads import states
-from uploads.utils import write_bytes_to_file
+from uploader import signals
+from uploader import states
+from uploader.utils import write_bytes_to_file
 
 
 class AbstractUpload(models.Model):
     """
     Abstract model for managing TUS uploads
     """
-    guid = models.UUIDField(_('GUID'), default=uuid.uuid4, unique=True)
+
+    guid = models.UUIDField(_("GUID"), default=uuid.uuid4, unique=True)
 
     state = FSMField(default=states.INITIAL)
 
@@ -26,7 +27,8 @@ class AbstractUpload(models.Model):
     upload_length = models.BigIntegerField(default=-1)
 
     upload_metadata = JSONField(
-        load_kwargs={'object_pairs_hook': collections.OrderedDict})
+        load_kwargs={"object_pairs_hook": collections.OrderedDict}
+    )
 
     filename = models.CharField(max_length=255, blank=True)
 
@@ -40,12 +42,12 @@ class AbstractUpload(models.Model):
     def clean_fields(self, exclude=None):
         super(AbstractUpload, self).clean_fields(exclude=exclude)
         if self.upload_offset < 0:
-            raise ValidationError(_('upload_offset should be >= 0.'))
+            raise ValidationError(_("upload_offset should be >= 0."))
 
     def write_data(self, data, chunk_size):
-        num_bytes_written = write_bytes_to_file(self.temporary_file_path,
-                                                self.upload_offset, data,
-                                                makedirs=True)
+        num_bytes_written = write_bytes_to_file(
+            self.temporary_file_path, self.upload_offset, data, makedirs=True
+        )
 
         if num_bytes_written > 0:
             self.upload_offset += num_bytes_written
@@ -53,27 +55,37 @@ class AbstractUpload(models.Model):
 
     def delete(self, *args, **kwargs):
         if self.temporary_file_path and os.path.exists(
-                self.temporary_file_path):
+            self.temporary_file_path
+        ):
             os.remove(self.temporary_file_path)
         super(AbstractUpload, self).delete(*args, **kwargs)
 
     def generate_filename(self):
-        return os.path.join('{}.bin'.format(uuid.uuid4()))
+        return os.path.join("{}.bin".format(uuid.uuid4()))
 
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
+    def save(
+        self,
+        force_insert=False,
+        force_update=False,
+        using=None,
+        update_fields=None,
+    ):
         if not self.filename:
             self.filename = self.generate_filename()
         return super(AbstractUpload, self).save(
-            force_insert=force_insert, force_update=force_update, using=using,
-            update_fields=update_fields)
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
 
     def is_complete(self):
         return self.upload_offset == self.upload_length
 
     def temporary_file_exists(self):
         return self.temporary_file_path and os.path.isfile(
-            self.temporary_file_path)
+            self.temporary_file_path
+        )
 
     def _temporary_file_exists(self):
         return self.temporary_file_exists()
@@ -87,8 +99,12 @@ class AbstractUpload(models.Model):
         assert os.path.isfile(self.temporary_file_path)
         return self.temporary_file_path
 
-    @transition(field=state, source=states.INITIAL, target=states.RECEIVING,
-                conditions=[_temporary_file_exists])
+    @transition(
+        field=state,
+        source=states.INITIAL,
+        target=states.RECEIVING,
+        conditions=[_temporary_file_exists],
+    )
     def start_receiving(self):
         """
         State transition to indicate the first file chunk has been received successfully
@@ -96,8 +112,12 @@ class AbstractUpload(models.Model):
         # Trigger signal
         signals.receiving.send(sender=self.__class__, instance=self)
 
-    @transition(field=state, source=states.RECEIVING, target=states.SAVING,
-                conditions=[is_complete])
+    @transition(
+        field=state,
+        source=states.RECEIVING,
+        target=states.SAVING,
+        conditions=[is_complete],
+    )
     def start_saving(self):
         """
         State transition to indicate that the upload is complete, and that the temporary file will be transferred to
@@ -119,8 +139,10 @@ class Upload(AbstractUpload):
     """
     Default Upload model
     """
-    uploaded_file = models.FileField(upload_to='uploaded', blank=True,
-                                     null=True, max_length=255)
+
+    uploaded_file = models.FileField(
+        upload_to="uploaded", blank=True, null=True, max_length=255
+    )
 
     def delete(self, *args, **kwargs):
         if self.state == states.DONE:
@@ -134,12 +156,15 @@ def get_upload_model():
     """
     from django.apps import apps as django_apps
     from .settings import TUS_UPLOAD_MODEL
+
     try:
         return django_apps.get_model(TUS_UPLOAD_MODEL)
     except ValueError:
         raise ImproperlyConfigured(
-            'UPLOAD_MODEL must be of the form \'app_label.model_name\'')
+            "UPLOAD_MODEL must be of the form 'app_label.model_name'"
+        )
     except LookupError:
         raise ImproperlyConfigured(
-            f'UPLOAD_MODEL refers to model \'{TUS_UPLOAD_MODEL}\' that has '
-            'not been installed')
+            f"UPLOAD_MODEL refers to model '{TUS_UPLOAD_MODEL}' that has "
+            "not been installed"
+        )
