@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "registration",
     "accounts",
     "drive_data",
+    "uploader.apps.TusUploadConfig",
     "crispy_forms",
     "django_cleanup",  # for file/folder delete
 ]

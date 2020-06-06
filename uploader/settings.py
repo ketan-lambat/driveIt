@@ -7,7 +7,7 @@ from django.conf import settings as django_settings
 REST_FRAMEWORK_TUS = getattr(django_settings, "REST_FRAMEWORK_TUS", {})
 
 # Retrieve settings
-TUS_UPLOAD_MODEL = REST_FRAMEWORK_TUS.get("UPLOAD_MODEL", "uploads.Upload")
+TUS_UPLOAD_MODEL = REST_FRAMEWORK_TUS.get("UPLOAD_MODEL", "uploader.Upload")
 TUS_UPLOAD_EXPIRES = REST_FRAMEWORK_TUS.get(
     "UPLOAD_EXPIRES", relativedelta.relativedelta(days=1)
 )

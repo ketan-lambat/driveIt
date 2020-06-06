@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class TusUploadConfig(AppConfig):
-    name = "uploads"
+    name = "uploader"
 
     # noinspection PyUnresolvedReferences
     def ready(self):
