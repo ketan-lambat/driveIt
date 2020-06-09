@@ -1,13 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import urlunquote as urldecode
-from django.views.generic import TemplateView, ListView, CreateView, View
+from django.views.generic import TemplateView, View
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 from drive_data.models import File, Folder
+from uploads.models import Upload
 
 
 class Home(TemplateView):
@@ -86,6 +89,34 @@ def file_upload_view(request, path):
 
 
 @login_required
+def streaming_file_upload_create(request):
+    if request.method == 'GET':
+        return HttpResponse(status=405)
+    try:
+        print(request.POST)
+        path = request.POST['path']
+        parent = get_parent(request.user, path)
+    except ValueError:
+        return HttpResponse("Not found")
+    from uploads.models import Upload
+
+    u = Upload.objects.create(
+        upload_length=request.POST['file_size'],
+        filename=request.POST['filename'],
+    )
+    file = File.objects.create(
+        name=request.POST['filename'],
+        file_size=request.POST['file_size'],
+        author=request.user,
+        file=None,
+        location=parent,
+        temp_file_id=u.guid,
+    )
+
+    return redirect(reverse('streaming_upload', kwargs={'guid': str(u.guid)}))
+
+
+@login_required
 def create_folder_view(request, path):
     try:
         parent = get_parent(request.user, path)
@@ -134,3 +165,21 @@ def folder_delete_view(request, pk):
     else:
         return HttpResponse("NOT ALLOWED")
     return redirect("drive_home")
+
+
+@csrf_exempt
+@login_required
+def streaming_file_upload(request, guid):
+    try:
+        u = Upload.objects.get(guid=guid)
+        f = File.objects.get(temp_file_id=guid)
+    except Upload.DoesNotExist:
+        return HttpResponse("Not found")
+    except File.DoesNotExist:
+        return HttpResponse("Not Found")
+
+    context = {
+        'upload_url': reverse('uploads:api:upload-detail',
+                              kwargs={'guid': f.temp_file_id})
+    }
+    return render(request, 'upload/streaming_upload.html', context=context)

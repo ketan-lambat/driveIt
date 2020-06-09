@@ -16,6 +16,7 @@ import dj_database_url
 from dotenv import load_dotenv
 from pathlib import Path
 from django.contrib.messages import constants as messages
+from corsheaders.defaults import default_headers
 
 env_path = Path(".") / ".env"
 load_dotenv(dotenv_path=env_path, verbose=True)
@@ -52,11 +53,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.humanize",
+    "rest_framework",
+    "corsheaders",
+    "uploads.apps.TusUploadConfig",
     "registration",
     "base",
     "accounts",
     "drive_data",
-    "uploader.apps.TusUploadConfig",
     "crispy_forms",
     "django_cleanup",  # for file/folder delete
 ]
@@ -66,12 +69,22 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "uploads.middleware.TusMiddleware",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ]
+}
 
 ROOT_URLCONF = "drive.urls"
 
@@ -110,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
@@ -149,7 +162,6 @@ LOGOUT_REDIRECT_URL = "/"
 
 LOGIN_URL = "/login/"
 
-
 MESSAGE_TAGS = {
     messages.INFO: "light-blue lighten-2",
     messages.WARNING: "orange lighten-2",
@@ -177,3 +189,31 @@ DATABASES["default"].update(db_from_env)
 
 # Activate Django-Heroku.
 # django_heroku.settings(locals())
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Tus-resumable',
+    'Upload-Offset',
+    'Upload-Length',
+    'Upload-Metadata',
+]
+
+CORS_EXPOSE_HEADERS = [
+    'Location',
+    'Tus-resumable',
+    'Upload-Offset',
+    'Upload-Length',
+    'Upload-Metadata',
+]
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880

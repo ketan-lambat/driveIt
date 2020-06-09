@@ -9,9 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 from django_fsm import FSMField, transition
 from jsonfield import JSONField
 
-from uploader import signals
-from uploader import states
-from uploader.utils import write_bytes_to_file
+from uploads import signals
+from uploads import states
+from uploads.utils import write_bytes_to_file
 
 
 class AbstractUpload(models.Model):

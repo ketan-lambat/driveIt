@@ -3,7 +3,8 @@
 {% block body %}
 
     <p>
-        <a href="{% url 'upload_file' %}" class="btn-small"><i class="material-icons right">add</i>Upload File</a>
+        <a href="{% url 'upload_file' %}" class="btn-small"><i
+                class="material-icons right">add</i>Upload File</a>
     </p>
     <h3>Uploaded File List</h3>
     <table class="striped">
@@ -19,7 +20,11 @@
         {% for file in files %}
             <tr>
                 <td>{{ file.name }}</td>
-                <td><a href="{{ file.file.url }}" target="_blank">{{ file.file.url }}</a></td>
+                <td><a href="
+                        {% if file.file %}{{ file.file.url }}{% else %}
+{% url 'streaming_upload' file.temp_file_id %}{% endif %}"
+                       target="_blank"
+                >{{ file.file.url }}</a></td>
                 <td> {{ file.size }} KB</td>
                 <td>
                     <form method="post" action="{% url 'delete_file' file.pk %}">

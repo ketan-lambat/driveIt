@@ -5,6 +5,10 @@ urlpatterns = [
     path("", views.DriveDataView.as_view(), name="drive_home"),
     path("delete/<pk>/", views.file_delete_view, name="delete_file"),
     path("delete_folder/<pk>/", views.folder_delete_view, name="delete_folder"),
+    path("create_streaming_upload", views.streaming_file_upload_create,
+         name='api_create_streaming_upload'),
+    path("streaming_upload/<guid>", views.streaming_file_upload,
+         name='streaming_upload'),
     # Make Sure to put regex path below other paths
     # otherwise re_path will consume the request
     # leading to a HTTP 405 Error or "Not Found" message

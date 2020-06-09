@@ -1,6 +1,7 @@
 from django.urls import re_path, include
-from uploader.views import UploadViewSet
-from uploader.routers import TusAPIRouter
+from uploads.views import UploadViewSet
+from uploads.routers import TusAPIRouter
+from django.views.decorators.csrf import csrf_exempt
 
 router = TusAPIRouter()
 router.register(r"files", UploadViewSet, basename="upload")

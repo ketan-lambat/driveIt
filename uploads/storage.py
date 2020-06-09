@@ -3,7 +3,7 @@ from abc import ABCMeta, abstractmethod
 from django.core.files import File
 from django.utils.module_loading import import_string
 
-from uploader import signals
+from uploads import signals
 from .settings import TUS_SAVE_HANDLER_CLASS
 
 

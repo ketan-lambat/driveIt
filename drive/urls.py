@@ -16,13 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic.base import RedirectView
 
 favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 
 urlpatterns = [
     path("", include("registration.urls")),
+    re_path(r"^", include("uploads.urls")),
     path("drive/", include("drive_data.urls")),
     # path('', include('accounts.urls')),
     path("admin/", admin.site.urls),
