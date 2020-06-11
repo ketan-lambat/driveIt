@@ -1,8 +1,9 @@
 {% extends 'registration/index.html' %}
 
 {% block content %}
+    <div class="container">
     {% if user.is_authenticated %}
-        <h1>Welcome, {{ user.username }}</h1>
+        <h1 style="color: whitesmoke">Welcome, {{ user.username }}  </h1>
         <a href="{% url 'logout' %}">Logout</a>
     {% else %}
         <h2>Existing User</h2>
@@ -10,4 +11,5 @@
         <h2>First Time Here</h2>
         <a href="{% url 'register_url' %}">Register</a>
     {% endif %}
+    </div>
 {% endblock %}
