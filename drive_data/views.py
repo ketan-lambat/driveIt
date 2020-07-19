@@ -8,6 +8,7 @@ from django.utils.http import urlunquote as urldecode
 from django.views.generic import TemplateView, ListView, CreateView, View
 from drive_data.models import File, Folder
 from django.conf import settings
+from shutil import make_archive
 from wsgiref.util import FileWrapper
 import os
 import tempfile
@@ -161,13 +162,61 @@ def file_download_view(request, path):
 		# return HttpResponse("Not Allowed")
 		return redirect("drive_home")
 
-
-def folder_download_view(request):
-	filename = settings.BASE_DIR + request.POST['name']
-	download_name = "example.csv"
-	wrapper = FileWrapper(open(filename))
-	content_type = mimetypes.guess_type(filename)[0]
-	response = HttpResponse(wrapper, content_type=content_type)
-	response['Content-Length'] = os.path.getsize(filename)
-	response['Content-Disposition'] = "attachment; filename=%s" % download_name
+@login_required
+def folder_download_view(request, pk):
+	"""
+	    A django view to zip files in directory and send it as downloadable response to the browser.
+	    Args:
+	      @request: Django request object
+	      @file_name: Name of the directory to be zipped
+	    Returns:
+	      A downloadable Http response
+	    """
+	folder = Folder.objects.get(author=request.user, pk=pk)
+	files = folder.files.all()
+	for file in files:
+		# files_path = os.path.join(settings.MEDIA_ROOT + '/uploads/', file.file.url)
+		files_path = os.path.join(settings.MEDIA_ROOT,'uploads/')
+		print("url path" , file.file.url)
+		print("filespath:", files_path)
+	path_to_zip = make_archive(files_path, "zip", files_path)
+	response = HttpResponse(FileWrapper(open(path_to_zip, 'rb')), content_type='application/zip')
+	response['Content-Disposition'] = 'attachment; filename="{filename}.zip"'.format(
+		filename=folder.name.replace(" ", "_")
+	)
 	return response
+
+	# print("Folder download view")
+	# response = HttpResponse(content_type='application/zip')
+	# zip_file = zipfile.ZipFile(response, 'w')
+	# try:
+	# 	folder = Folder.objects.get(author=request.user, pk=pk)
+	# except:
+	# 	return HttpResponse("Folder does not exist.")
+	#
+	# files_folder = folder.files_folder.all()
+	# files = folder.files.all()
+	# for file in files:
+	# 	zip_file.write(file)
+	# zip_subdir = folder.name
+	#
+	# print("closing zip")
+	# zip_file.close()
+	# zip_file.printdir()
+	#
+	# response['Content-Disposition'] = 'attachment; filename={}'.format(folder.name)
+	#
+	# print("response : ", response)
+	# return response
+	# # src
+	# # https://stackoverflow.com/questions/67454/serving-dynamically-generated-zip-archives-in-django
+
+	#
+	# filename = settings.BASE_DIR + request.POST['name']
+	# download_name = "example.csv"
+	# wrapper = FileWrapper(open(filename))
+	# content_type = mimetypes.guess_type(filename)[0]
+	# response = HttpResponse(wrapper, content_type=content_type)
+	# response['Content-Length'] = os.path.getsize(filename)
+	# response['Content-Disposition'] = "attachment; filename=%s" % download_name
+	# return response
