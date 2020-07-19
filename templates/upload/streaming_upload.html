@@ -26,7 +26,7 @@
             var file = i.files[0];
             var upload = new tus.Upload(file, {
                 chunkSize: 32768,
-                uploadUrl: "http://127.0.0.1:8000" + upload_url,
+                uploadUrl: upload_url,
                 metadata: {
                     filename: file.name,
                     filetype: file.type

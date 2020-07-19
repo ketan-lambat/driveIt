@@ -182,7 +182,8 @@ def streaming_file_upload(request, guid):
         return HttpResponse("Not Found")
 
     context = {
-        'upload_url': reverse('uploads:api:upload-detail',
-                              kwargs={'guid': f.temp_file_id})
+        'upload_url': request.build_absolute_uri(
+            reverse('uploads:api:upload-detail', kwargs={'guid': f.temp_file_id})
+        )
     }
     return render(request, 'upload/streaming_upload.html', context=context)

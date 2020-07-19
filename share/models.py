@@ -16,5 +16,6 @@ class SharedItem(models.Model):
 
     def link(self):
         from django.urls import reverse
-        return 'http://127.0.0.1:8000'+reverse('shared_view', kwargs={'guid':
-                                                                     self.public_id})
+        from django.conf import settings
+        return settings.URL + reverse('shared_view', kwargs={'guid':
+                                                                 self.public_id})

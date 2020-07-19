@@ -183,7 +183,7 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 EMAIL_TIMEOUT = 300
 
 # URL = 'http://localhost:8000'
-URL = os.getenv("URL")
+URL = str(os.getenv("URL", 'http://127.0.0.1:8000'))
 
 db_from_env = dj_database_url.config(conn_max_age=3600)
 DATABASES["default"].update(db_from_env)
