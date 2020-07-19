@@ -12,6 +12,8 @@ from django.conf import settings
 from shutil import make_archive
 from wsgiref.util import FileWrapper
 import os
+import shutil
+import errno
 import tempfile
 import zipfile
 import mimetypes
@@ -19,6 +21,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from drive_data.models import File, Folder
 from uploads.models import Upload
+
 
 class Home(TemplateView):
 	template_name = "basic.html"
@@ -37,29 +40,29 @@ class DriveDataView(LoginRequiredMixin, View):
 
 
 class FolderDataView(LoginRequiredMixin, View):
-  def get(self, request, path):
-      print(path)
-      if path in [None, '', '/', '//']:
-          return redirect('drive_home')
-      path = path.split("/")
-      user = request.user
-      parent = Folder.objects.get(drive_user=user)
-      paths = []
-      for i in range(len(path)):
-          paths.append((urldecode(path[i]), "/".join(path[: i + 1])))
-      for folder in map(urldecode, path):
-          try:
-              parent = parent.files_folder.get(name=folder)
-          except:
-              return HttpResponse("Not found")
-      context = {
-          "files": parent.files.all(),
-          "folders": parent.files_folder.all(),
-          "paths": paths,
-          "current_path": "/".join(path),
-      }
+	def get(self, request, path):
+		print(path)
+		if path in [None, '', '/', '//']:
+			return redirect('drive_home')
+		path = path.split("/")
+		user = request.user
+		parent = Folder.objects.get(drive_user=user)
+		paths = []
+		for i in range(len(path)):
+			paths.append((urldecode(path[i]), "/".join(path[: i + 1])))
+		for folder in map(urldecode, path):
+			try:
+				parent = parent.files_folder.get(name=folder)
+			except:
+				return HttpResponse("Not found")
+		context = {
+			"files": parent.files.all(),
+			"folders": parent.files_folder.all(),
+			"paths": paths,
+			"current_path": "/".join(path),
+		}
 
-      return render(request, "drive_data/folder_data.html", context=context)
+		return render(request, "drive_data/folder_data.html", context=context)
 
 
 def get_parent(user, path):
@@ -100,30 +103,30 @@ def file_upload_view(request, path):
 
 @login_required
 def streaming_file_upload_create(request):
-    if request.method == 'GET':
-        return HttpResponse(status=405)
-    try:
-        print(request.POST)
-        path = request.POST['path']
-        parent = get_parent(request.user, path)
-    except ValueError:
-        return HttpResponse("Not found")
-    from uploads.models import Upload
+	if request.method == 'GET':
+		return HttpResponse(status=405)
+	try:
+		print(request.POST)
+		path = request.POST['path']
+		parent = get_parent(request.user, path)
+	except ValueError:
+		return HttpResponse("Not found")
+	from uploads.models import Upload
 
-    u = Upload.objects.create(
-        upload_length=request.POST['file_size'],
-        filename=request.POST['filename'],
-    )
-    file = File.objects.create(
-        name=request.POST['filename'],
-        file_size=request.POST['file_size'],
-        author=request.user,
-        file=None,
-        location=parent,
-        temp_file_id=u.guid,
-    )
+	u = Upload.objects.create(
+		upload_length=request.POST['file_size'],
+		filename=request.POST['filename'],
+	)
+	file = File.objects.create(
+		name=request.POST['filename'],
+		file_size=request.POST['file_size'],
+		author=request.user,
+		file=None,
+		location=parent,
+		temp_file_id=u.guid,
+	)
 
-    return redirect(reverse('streaming_upload', kwargs={'guid': str(u.guid)}))
+	return redirect(reverse('streaming_upload', kwargs={'guid': str(u.guid)}))
 
 
 @login_required
@@ -200,6 +203,10 @@ def file_download_view(request, path):
 
 @login_required
 def folder_download_view(request, pk):
+	# references
+	# https://gist.github.com/viveksoundrapandi/9600712
+	# https://stackoverflow.com/questions/45088930/can-we-create-directory-in-view-django
+	# https://www.geeksforgeeks.org/python-shutil-copy-method/
 	"""
 	    A django view to zip files in directory and send it as downloadable response to the browser.
 	    Args:
@@ -210,32 +217,55 @@ def folder_download_view(request, pk):
 	    """
 	folder = Folder.objects.get(author=request.user, pk=pk)
 	files = folder.files.all()
+
+	static_dir = settings.MEDIA_ROOT
+
+	# creating a tmp folder in media root for zipping
+	tmp_dir_path = os.path.join(static_dir + '/uploads/', folder.name + '/')
+	try:
+		os.makedirs(tmp_dir_path)
+	except PermissionError as e:
+		print("Permission denied.", e)
+	except OSError as e:
+		if e.errno != errno.EEXIST:
+			# directory already exists
+			tmp_dir_path = os.path.join(settings.MEDIA_ROOT + '/uploads/', folder.name)
+		else:
+			print("error:", e)
+
 	for file in files:
-		files_path = os.path.join(settings.MEDIA_ROOT, 'uploads/')
-		print("filespath:", files_path)
-	path_to_zip = make_archive(files_path, "zip", files_path)
+		shutil.copy(file.file.path, tmp_dir_path)
+		print(file.file.path)
+
+	print("tmp dir path: ", tmp_dir_path)
+	path_to_zip = make_archive(tmp_dir_path, "zip", tmp_dir_path)
+
 	response = HttpResponse(FileWrapper(open(path_to_zip, 'rb')), content_type='application/zip')
 	response['Content-Disposition'] = 'attachment; filename="{filename}.zip"'.format(
 		filename=folder.name.replace(" ", "_")
 	)
+	# Removing a directory
+	try:
+		shutil.rmtree(tmp_dir_path)
+	except OSError as e:
+		print(e)
 	return response
-# src
-# https://gist.github.com/viveksoundrapandi/9600712
+
 
 @csrf_exempt
 @login_required
 def streaming_file_upload(request, guid):
-    try:
-        u = Upload.objects.get(guid=guid)
-        f = File.objects.get(temp_file_id=guid)
-    except Upload.DoesNotExist:
-        return HttpResponse("Not found")
-    except File.DoesNotExist:
-        return HttpResponse("Not Found")
+	try:
+		u = Upload.objects.get(guid=guid)
+		f = File.objects.get(temp_file_id=guid)
+	except Upload.DoesNotExist:
+		return HttpResponse("Not found")
+	except File.DoesNotExist:
+		return HttpResponse("Not Found")
 
-    context = {
-        'upload_url': request.build_absolute_uri(
-            reverse('uploads:api:upload-detail', kwargs={'guid': f.temp_file_id})
-        )
-    }
-    return render(request, 'upload/streaming_upload.html', context=context)
+	context = {
+		'upload_url': request.build_absolute_uri(
+			reverse('uploads:api:upload-detail', kwargs={'guid': f.temp_file_id})
+		)
+	}
+	return render(request, 'upload/streaming_upload.html', context=context)
