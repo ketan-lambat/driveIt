@@ -93,6 +93,7 @@
         <tr>
             <td>Name</td>
             <td>Size</td>
+            <td>Download</td>
             <td>Delete</td>
         </tr>
         </thead>
@@ -115,6 +116,10 @@
                 <td><a href="{{ file.file.url }}" target="_blank">
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}</a></td>
                 <td> {{ file.file_size|filesizeformat  }} </td>
+                <td><a href="{{ file.file.url }}" download=>
+                    <i class="small material-icons"
+                       style="font-size: 40px">cloud_download </i>
+                </a></td>
                 <td>
                     <form method="post" action="{% url 'delete_file' file.pk %}">
                         {% csrf_token %}

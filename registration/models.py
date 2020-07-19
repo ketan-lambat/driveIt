@@ -4,8 +4,8 @@ from django.db import models
 
 class User(AbstractUser):
     drive = models.OneToOneField(
-        'drive_data.Folder',
+        "drive_data.Folder",
         on_delete=models.SET_NULL,
         null=True,
-        related_name='drive_user',
+        related_name="drive_user",
     )
