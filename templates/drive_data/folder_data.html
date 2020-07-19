@@ -144,9 +144,15 @@
         {% endfor %}
         {% for file in files %}
             <tr>
-                <td><a href="{{ file.file.url }}" target="_blank">
+                <td>
+                    {% if file.file %}
+                        <a href="{{ file.file.url }}" target="_blank">
+                    {% else %}
+                        <a href="{% url 'streaming_upload' file.temp_file_id %}"
+                           target="_blank">
+                    {% endif %}
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}
-                </a></td>
+                    </a></td>
                 <td> {{ file.file_size|filesizeformat }} </td>
                 <td>
                     {% if file.file %}
