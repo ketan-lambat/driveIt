@@ -31,6 +31,9 @@ class DriveDataView(LoginRequiredMixin, View):
 
 class FolderDataView(LoginRequiredMixin, View):
     def get(self, request, path):
+        print(path)
+        if path in [None, '', '/', '//']:
+            return redirect('drive_home')
         path = path.split("/")
         user = request.user
         parent = Folder.objects.get(drive_user=user)

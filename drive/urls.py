@@ -23,6 +23,7 @@ favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 
 urlpatterns = [
     path("", include("registration.urls")),
+    path("", include("share.urls")),
     re_path(r"^", include("uploads.urls")),
     path("drive/", include("drive_data.urls")),
     # path('', include('accounts.urls')),

@@ -112,6 +112,7 @@
         <tr>
             <td>Name</td>
             <td>Size</td>
+            <td>Share</td>
             <td>Delete</td>
         </tr>
         </thead>
@@ -121,6 +122,8 @@
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
                 <td> {{ folder.size|filesizeformat }} </td>
+                <td><a href="{% url 'share_item' folder.pk %}"><i
+                        class="material-icons left">share</i></a></td>
                 <td>
                     <form method="post" action="{% url 'delete_folder' folder.pk %}">
                         {% csrf_token %}
@@ -141,6 +144,14 @@
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}
                     </a></td>
                 <td> {{ file.file_size|filesizeformat }} </td>
+                <td>
+                    {% if file.file %}
+                        <a href="{% url 'share_item' file.pk %}" target="_blank">
+                    {% else %}
+                        <a href="#">
+                    {% endif %}
+                    <i class="material-icons left">share</i>
+                    </a></td>
                 <td>
                     <form method="post" action="{% url 'delete_file' file.pk %}">
                         {% csrf_token %}

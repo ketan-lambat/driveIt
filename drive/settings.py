@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "base",
     "accounts",
     "drive_data",
+    'share',
     "crispy_forms",
     "django_cleanup",  # for file/folder delete
 ]

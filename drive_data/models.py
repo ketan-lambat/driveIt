@@ -16,6 +16,15 @@ class Item(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    @property
+    def size(self):
+        if hasattr(self, 'drive_file'):
+            return self.drive_file.file_size
+        elif hasattr(self, 'drive_folder'):
+            return self.drive_folder.size
+        else:
+            return 0
+
 
 class File(Item):
     file = models.FileField(upload_to="uploads/", null=True, default=None)
@@ -28,6 +37,9 @@ class File(Item):
     location = models.ForeignKey(
         "Folder", on_delete=models.CASCADE, related_name="files"
     )
+
+    is_file = True
+    is_folder = False
 
     def __str__(self):
         return self.name
@@ -46,6 +58,9 @@ class Folder(Item):
         related_name="files_folder",
         null=True,
     )
+
+    is_file = False
+    is_folder = True
 
     @property
     def size(self):
