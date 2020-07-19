@@ -93,6 +93,7 @@
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
                 <td> {{ folder.size|filesizeformat }} </td>
+                <td></td>
 {#                <td><a href="{{ folder.url }}" download> <i class="small material-icons" style="font-size: 40px">cloud_download </i> </a></td>#}
                 <td>
                     <form method="post" action="{% url 'delete_folder' folder.pk %}">
