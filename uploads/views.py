@@ -10,8 +10,9 @@ from rest_framework.metadata import BaseMetadata
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 from django.urls import reverse
-
-from uploader.parsers import TusUploadStreamParser
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+from uploads.parsers import TusUploadStreamParser
 from . import (
     tus_api_version,
     tus_api_version_supported,
@@ -125,8 +126,8 @@ class TusCreateMixin(mixins.CreateModelMixin):
         # If upload_length is not given, we expect the defer header!
         if not upload_length or upload_length < 0:
             if (
-                getattr(request, constants.UPLOAD_DEFER_LENGTH_FIELD_NAME, -1)
-                != 1
+                    getattr(request, constants.UPLOAD_DEFER_LENGTH_FIELD_NAME, -1)
+                    != 1
             ):
                 return Response(
                     'Missing "{Upload-Defer-Length}" header.',
@@ -295,7 +296,7 @@ class TusPatchMixin(mixins.UpdateModelMixin):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
             elif not checksum_matches(
-                upload_checksum[0], upload_checksum[1], chunk_bytes
+                    upload_checksum[0], upload_checksum[1], chunk_bytes
             ):
                 return Response("Checksum Mismatch.", status=460)
 
@@ -376,6 +377,10 @@ class UploadViewSet(
     lookup_field = "guid"
     lookup_value_regex = "[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}"
     parser_classes = [TusUploadStreamParser]
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(UploadViewSet, self).dispatch(*args, **kwargs)
 
     def get_queryset(self):
         return get_upload_model().objects.all()

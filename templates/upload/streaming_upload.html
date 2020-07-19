@@ -1,0 +1,53 @@
+{% extends 'basic.html' %}
+{% load static %}
+{% block title %}
+    Upload File
+{% endblock %}
+{% block head %}
+    <script src="{% static 'js/tus.js' %}"></script>
+{% endblock %}
+{% block body %}
+    <h2>Upload file</h2>
+
+    <label for="file_id">Select File</label>
+    <input type="file" name="file" id="file" class="file-upload"><br><br>
+    <progress id="file_upload" style="width: 50%"></progress>
+    <br><br>
+    <script>
+        function start_upload() {
+            console.log("starting upload");
+            var upload_url = '{{ upload_url }}';
+            var i = document.getElementById('file');
+            if (i.files.length === 0) {
+                alert("Select a file");
+                return;
+            }
+
+            var file = i.files[0];
+            var upload = new tus.Upload(file, {
+                chunkSize: 32768,
+                uploadUrl: upload_url,
+                metadata: {
+                    filename: file.name,
+                    filetype: file.type
+                },
+                onError: function (error) {
+                    console.log("Failed because: " + error)
+                },
+                onProgress: function (bytesUploaded, bytesTotal) {
+                    var percentage = (bytesUploaded / bytesTotal * 100).toFixed(2)
+                    console.log(bytesUploaded, bytesTotal, percentage + "%")
+                    var progress = document.getElementById('file_upload');
+                    progress.setAttribute('max', bytesTotal);
+                    progress.setAttribute('value', bytesUploaded);
+                },
+                onSuccess: function () {
+                    console.log("Download %s from %s", upload.file.name, upload.url)
+                    window.close();
+                }
+            });
+            upload.start();
+        }
+    </script>
+    <button class="btn-small" onclick="start_upload()">Start Upload</button>
+{% endblock %}

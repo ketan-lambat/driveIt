@@ -12,12 +12,14 @@
     {% load humanize %}
     <h2>Welcome, {{ request.user.first_name }}</h2>
     <p>
-    <form id="file_upload_form" method="post" action="{% url 'file_upload_view' path=current_path %}"
+    <form id="file_upload_form" method="post"
+          action="{% url 'file_upload_view' path=current_path %}"
           enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="file" id="new_file_upload" hidden>
     </form>
-    <div id="new_folder" style="position: fixed; left: 45%; top: 12%; background: white; width: 50%; height: 20%;"
+    <div id="new_folder"
+         style="position: fixed; left: 45%; top: 12%; background: white; width: 50%; height: 20%;"
          hidden>
         <form class="col s12" id="create_folder_form" method="post"
               action="{% url 'create_folder_view' path=current_path %}">
@@ -25,7 +27,8 @@
             <div class="row">
                 <div class="row">
                     <div class="input-field col s6" style="display: inline">
-                        <input type="text" name="folder_name" id="new_folder_name" placeholder="Folder Name"
+                        <input type="text" name="folder_name" id="new_folder_name"
+                               placeholder="Folder Name"
                                class="validate" required value="New Folder">
                     </div>
                     <div class="input-field col s6" style="display: inline">
@@ -39,9 +42,21 @@
         </form>
     </div>
 
-    <a href="#" class="btn-small" id="file_upload_button"><i class="material-icons right">file_upload</i>Upload File</a>
+    <input type="file" id="streaming_file_input" hidden>
+    <form method="post" action="{% url 'api_create_streaming_upload' %}"
+          id="streaming_form" target="_blank">
+        {% csrf_token %}
+        <input type="number" name="file_size" id="streaming_file_size" hidden>
+        <input type="text" name="filename" id="streaming_filename" hidden>
+        <input type="text" name="path" id="streaming_file_location" hidden>
+    </form>
+
+    <a href="#" class="btn-small" id="file_upload_button"><i
+            class="material-icons right">file_upload</i>Upload File</a>
     <a href="#" class="btn-small" id="create_folder"><i class="material-icons right">create_new_folder</i>Create
         Folder</a>
+    <a href="#" class="btn-small" id="streaming_upload_button"><i class="material-icons
+    right">file_upload</i>Large File Upload</a>
     <script>
         let fb = document.getElementById("file_upload_button");
         let file = document.getElementById("new_file_upload");
@@ -79,8 +94,22 @@
                 nfn.classList.remove("empty-data");
             }
         };
+
+        let sfb = document.getElementById("streaming_upload_button");
+        let sfile = document.getElementById('streaming_file_input');
+        sfb.onclick = function () {
+            sfile.click();
+        }
+        sfile.onchange = function () {
+            let mfile = sfile.files[0];
+            document.getElementById("streaming_filename").value = mfile.name;
+            document.getElementById("streaming_file_size").value = mfile.size;
+            document.getElementById("streaming_file_location").value = '{{ current_path }}';
+            document.getElementById("streaming_form").submit();
+        }
+
     </script>
-    </p>
+
     <h3>
         <a href="{% url 'drive_home' %}">My Drive/</a>
         {% for folder, folder_path in paths %}
@@ -94,6 +123,7 @@
             <td>Name</td>
             <td>Size</td>
             <td>Download</td>
+            <td>Share</td>
             <td>Delete</td>
         </tr>
         </thead>
@@ -102,7 +132,10 @@
             <tr>
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
-                <td> {{  folder.size|filesizeformat  }} </td>
+                <td> {{ folder.size|filesizeformat }} </td>
+                <td><a href="{% url 'folder_download' folder.pk %}" download> <i class="small material-icons" style="font-size: 40px">cloud_download </i> </a></td>
+                <td><a href="{% url 'share_item' folder.pk %}"><i
+                        class="material-icons left">share</i></a></td>
                 <td>
                     <form method="post" action="{% url 'delete_folder' folder.pk %}">
                         {% csrf_token %}
@@ -113,13 +146,28 @@
         {% endfor %}
         {% for file in files %}
             <tr>
-                <td><a href="{{ file.file.url }}" target="_blank">
-                    <i class="material-icons left">insert_drive_file</i>{{ file.name }}</a></td>
+                <td>
+                    {% if file.file %}
+                        <a href="{{ file.file.url }}" target="_blank">
+                    {% else %}
+                        <a href="{% url 'streaming_upload' file.temp_file_id %}"
+                           target="_blank">
+                    {% endif %}
+                    <i class="material-icons left">insert_drive_file</i>{{ file.name }}
+                    </a></td>
                 <td> {{ file.file_size|filesizeformat  }} </td>
                 <td><a href="{{ file.file.url }}" download=>
                     <i class="small material-icons"
                        style="font-size: 40px">cloud_download </i>
                 </a></td>
+                <td>
+                    {% if file.file %}
+                        <a href="{% url 'share_item' file.pk %}" target="_blank">
+                    {% else %}
+                        <a href="#">
+                    {% endif %}
+                    <i class="material-icons left">share</i>
+                    </a></td>
                 <td>
                     <form method="post" action="{% url 'delete_file' file.pk %}">
                         {% csrf_token %}

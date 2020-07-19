@@ -1,6 +1,6 @@
 from django.urls import reverse
 from rest_framework import serializers
-from uploader.models import get_upload_model, Upload
+from uploads.models import get_upload_model, Upload
 
 
 class UploadSerializer(serializers.ModelSerializer):

@@ -33,7 +33,7 @@ def register_view(request):
             u = form.save()
             user_token = registration_token_generator.make_token(u)
             b64id = b64_encode(bytes(str(u.pk).encode()))
-            url = settings.URL + reverse(
+            url = str(settings.URL) + reverse(
                 "account_verification", args=[b64id, user_token]
             )
             text = (

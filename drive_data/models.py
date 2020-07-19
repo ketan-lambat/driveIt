@@ -16,17 +16,30 @@ class Item(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    @property
+    def size(self):
+        if hasattr(self, 'drive_file'):
+            return self.drive_file.file_size
+        elif hasattr(self, 'drive_folder'):
+            return self.drive_folder.size
+        else:
+            return 0
+
 
 class File(Item):
-    file = models.FileField(upload_to="uploads/", null=False, default=None)
+    file = models.FileField(upload_to="uploads/", null=True, default=None)
     file_extension = models.CharField(max_length=10)
     file_type = models.CharField(max_length=20)
     file_size = models.DecimalField(
         max_digits=99, decimal_places=90, validators=[MinValueValidator(0.01)]
     )
+    temp_file_id = models.UUIDField(blank=True, null=True)
     location = models.ForeignKey(
         "Folder", on_delete=models.CASCADE, related_name="files"
     )
+
+    is_file = True
+    is_folder = False
 
     def __str__(self):
         return self.name
@@ -45,6 +58,9 @@ class Folder(Item):
         related_name="files_folder",
         null=True,
     )
+
+    is_file = False
+    is_folder = True
 
     @property
     def size(self):

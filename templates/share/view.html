@@ -1,0 +1,24 @@
+{% extends 'basic.html' %}
+{% block title %}
+    {{ shared.item.name }}
+{% endblock %}
+{% block body %}
+    <h1>{{ shared.item.name }}</h1>
+    <h4>Owner: {{ shared.item.author }}</h4>
+    <table class="striped">
+        <thead>
+        <tr>
+            <td>Name</td>
+            <td>Size</td>
+            <td>Download</td>
+        </tr>
+        </thead>
+        <td>{{ shared.item.name }}</td>
+        <td> {{ shared.item.size|filesizeformat }} </td>
+        <td><a href="{% url 'download_file' shared.public_id shared.item.pk %}"><i
+                class="material-icons
+        left">cloud_download</i></a></td>
+
+    </table>
+{% endblock %}
+

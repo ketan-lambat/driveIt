@@ -9,3 +9,6 @@ class User(AbstractUser):
         null=True,
         related_name="drive_user",
     )
+
+    def __str__(self):
+        return f'"{self.username}" {self.first_name} {self.last_name}'
