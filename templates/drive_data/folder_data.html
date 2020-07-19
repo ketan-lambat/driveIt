@@ -122,6 +122,7 @@
         <tr>
             <td>Name</td>
             <td>Size</td>
+            <td>Download</td>
             <td>Share</td>
             <td>Delete</td>
         </tr>
@@ -132,6 +133,7 @@
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
                 <td> {{ folder.size|filesizeformat }} </td>
+                <td><a href="{% url 'folder_download' folder.pk %}" download> <i class="small material-icons" style="font-size: 40px">cloud_download </i> </a></td>
                 <td><a href="{% url 'share_item' folder.pk %}"><i
                         class="material-icons left">share</i></a></td>
                 <td>
@@ -153,7 +155,11 @@
                     {% endif %}
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}
                     </a></td>
-                <td> {{ file.file_size|filesizeformat }} </td>
+                <td> {{ file.file_size|filesizeformat  }} </td>
+                <td><a href="{{ file.file.url }}" download=>
+                    <i class="small material-icons"
+                       style="font-size: 40px">cloud_download </i>
+                </a></td>
                 <td>
                     {% if file.file %}
                         <a href="{% url 'share_item' file.pk %}" target="_blank">
