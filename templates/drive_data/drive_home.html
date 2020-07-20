@@ -123,7 +123,9 @@
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
                 <td> {{ folder.size|filesizeformat }} </td>
-                <td><a href="{% url 'folder_download' folder.pk %}" download> <i class="small material-icons" style="font-size: 40px">cloud_download </i> </a></td>
+                <td><a href="{% url 'folder_download' folder.pk %}" download> <i
+                        class="small material-icons" style="font-size: 40px">cloud_download </i>
+                </a></td>
                 <td><a href="{% url 'share_item' folder.pk %}"><i
                         class="material-icons left">share</i></a></td>
                 <td>
@@ -146,11 +148,21 @@
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}
                     </a></td>
                 <td> {{ file.file_size|filesizeformat }} </td>
-                {#                <td><a href="{% url 'file_download' path=file.file.url %}"> <i class="small material-icons" style="font-size: 40px">cloud_download </i> </a></td>#}
-                <td><a href="{{ file.file.url }}" download=>
-                    <i class="small material-icons"
-                       style="font-size: 40px">cloud_download </i>
-                </a></td>
+
+                <td>
+                    {% if file.file %}
+                        <a href="{{ file.file.url }}" target="_blank">
+                            <i class="small material-icons"
+                               style="font-size: 40px">cloud_download</i>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'streaming_upload' file.temp_file_id %}"
+                           target="_blank">
+                            <i class="small material-icons"
+                               style="font-size: 40px">cloud_upload</i>
+                        </a>
+                    {% endif %}
+                </td>
 
                 <td>
                     {% if file.file %}
