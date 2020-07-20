@@ -10,7 +10,7 @@
 {% block body %}
 
     {% load humanize %}
-    <h2>Welcome, {{ request.user.first_name }}</h2>
+    <h2>Welcome, {{ user.username }}</h2>
     <p>
     <form id="file_upload_form" method="post"
           action="{% url 'file_upload_view' path=current_path %}"
