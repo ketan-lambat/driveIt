@@ -180,22 +180,42 @@ def folder_delete_view(request, pk):
 	return redirect("drive_home")
 
 
-def file_download_view(request, path):
-	print(path)
+# def file_download_view(request, path):
+# 	print(path)
+# 	if request.method == "GET":
+# 		try:
+# 			file_path = os.path.join(settings.MEDIA_ROOT + "/uploads/", path)
+# 			print("file_path" + file_path)
+# 			if os.path.exists(file_path):
+# 				with open(file_path, 'rb') as fh:
+# 					response = HttpResponse(fh.read())
+# 					response['Content-Type'] = 'text/plain'
+# 					response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+# 					return response
+# 			raise Http404
+# 		except:
+# 			return HttpResponse("File does not exist.")
+#
+# 	else:
+# 		# return HttpResponse("Not Allowed")
+# 		return redirect("drive_home")
+
+
+@login_required
+def file_download_view(request, pk):
+	file = File.objects.get(author=request.user, pk=pk)
 	if request.method == "GET":
 		try:
-			file_path = os.path.join(settings.MEDIA_ROOT + "/uploads/", path)
-			print("file_path" + file_path)
+			file_path = file.file.path
 			if os.path.exists(file_path):
 				with open(file_path, 'rb') as fh:
 					response = HttpResponse(fh.read())
-					response['Content-Type'] = 'text/plain'
-					response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+					response['Content-Type'] = 'application/octet-stream'
+					response['Content-Disposition'] = 'inline; filename="%s"' % file.name
 					return response
 			raise Http404
 		except:
 			return HttpResponse("File does not exist.")
-
 	else:
 		# return HttpResponse("Not Allowed")
 		return redirect("drive_home")
@@ -216,6 +236,7 @@ def folder_download_view(request, pk):
 	      A downloadable Http response
 	    """
 	folder = Folder.objects.get(author=request.user, pk=pk)
+	folders = folder.files_folder.all()
 	files = folder.files.all()
 
 	static_dir = settings.MEDIA_ROOT
@@ -236,11 +257,15 @@ def folder_download_view(request, pk):
 	for file in files:
 		shutil.copy(file.file.path, tmp_dir_path)
 		print(file.file.path)
+	# root_tmp_path = tmp_dir_path
+	# for folder in folders:
+	# 	os.makedirs(tmp_dir_path + folder.name)
 
 	print("tmp dir path: ", tmp_dir_path)
 	path_to_zip = make_archive(tmp_dir_path, "zip", tmp_dir_path)
 
 	response = HttpResponse(FileWrapper(open(path_to_zip, 'rb')), content_type='application/zip')
+	# response['']
 	response['Content-Disposition'] = 'attachment; filename="{filename}.zip"'.format(
 		filename=folder.name.replace(" ", "_")
 	)
