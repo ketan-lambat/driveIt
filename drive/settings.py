@@ -1,3 +1,4 @@
+
 """
 Django settings for drive project.
 
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
 	'accounts',
 	'drive_data',
 	'crispy_forms',
+	'blog',
 	'django_cleanup',  # for file/folder delete
 ]
 

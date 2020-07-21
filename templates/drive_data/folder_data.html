@@ -4,13 +4,15 @@
     <style>
         .empty-data::placeholder {
             color: red;
+
         }
+
     </style>
 {% endblock %}
 {% block body %}
 
     {% load humanize %}
-    <h2>Welcome, {{ request.user.first_name }}</h2>
+    <h2>Welcome, {{ user.username }}</h2>
     <p>
     <form id="file_upload_form" method="post" action="{% url 'file_upload_view' path=current_path %}"
           enctype="multipart/form-data">
@@ -80,7 +82,7 @@
             }
         };
     </script>
-    </p>
+
     <h3>
         <a href="{% url 'drive_home' %}">My Drive/</a>
         {% for folder, folder_path in paths %}
@@ -93,6 +95,7 @@
         <tr>
             <td>Name</td>
             <td>Size</td>
+            <td>share</td>
             <td>Delete</td>
         </tr>
         </thead>
@@ -102,6 +105,12 @@
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
                 <td> {{  folder.size|filesizeformat  }} </td>
+                <td>
+{#                    <form method="post" action="{% url 'delete_folder' folder.pk %}">#}
+{#                        {% csrf_token %}#}
+                        <button  class="btn-small red"> share</button>
+{#                    </form>#}
+                </td>
                 <td>
                     <form method="post" action="{% url 'delete_folder' folder.pk %}">
                         {% csrf_token %}
@@ -115,9 +124,19 @@
                 <td><a href="{{ file.file.url }}" target="_blank">
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}</a></td>
                 <td> {{ file.file_size|filesizeformat  }} </td>
+
+{#                <td>#}
+{#                    <form method="post" action="{% url 'share' file.pk %}">#}
+{#                        {% csrf_token %}#}
+
+                        <button  class="btn-small blue"> Share</button>
+{#                    </form>#}
+
+{#                </td>#}
                 <td>
                     <form method="post" action="{% url 'delete_file' file.pk %}">
                         {% csrf_token %}
+
                         <button type="submit" class="btn-small red"> Delete</button>
                     </form>
 
