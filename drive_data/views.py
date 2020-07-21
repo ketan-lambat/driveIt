@@ -11,6 +11,7 @@ from drive_data.models import File, Folder
 from django.conf import settings
 from shutil import make_archive
 from wsgiref.util import FileWrapper
+from ranged_fileresponse import RangedFileResponse
 import os
 import shutil
 import errno
@@ -207,11 +208,15 @@ def file_download_view(request, pk):
 	if request.method == "GET":
 		try:
 			file_path = file.file.path
+			filename = file.name
 			if os.path.exists(file_path):
 				with open(file_path, 'rb') as fh:
+					# response = RangedFileResponse(request, open(filename, 'r'))
 					response = HttpResponse(fh.read())
 					response['Content-Type'] = 'application/octet-stream'
-					response['Content-Disposition'] = 'inline; filename="%s"' % file.name
+					# response['Content-Range'] = 'bytes='
+					response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+					# response['Content-Disposition'] = 'inline; filename="%s"' % file.name
 					return response
 			raise Http404
 		except:
