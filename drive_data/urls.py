@@ -12,6 +12,7 @@ urlpatterns = [
 		 name='api_create_streaming_upload'),
 	path("streaming_upload/<guid>", views.streaming_file_upload,
 		 name='streaming_upload'),
+	path("rename_file/<pk>", views.file_rename_view, name="rename_file"),
 	# Make Sure to put regex path below other paths
 	# otherwise re_path will consume the request
 	# leading to a HTTP 405 Error or "Not Found" message

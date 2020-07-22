@@ -299,3 +299,18 @@ def streaming_file_upload(request, guid):
 		)
 	}
 	return render(request, 'upload/streaming_upload.html', context=context)
+
+
+@login_required
+def file_rename_view(request, pk):
+	if request.method == "POST":
+		file = File.objects.get(author=request.user, pk=pk)
+		new_name = request.POST['file_name_new']
+		print(file.name, file.pk, file.file.path)
+		old_path = settings.MEDIA_ROOT + '/uploads/' + file.name
+		new_path = settings.MEDIA_ROOT + '/uploads/' + new_name
+		os.rename(old_path, new_path)
+		file.name = new_name
+		file.save()
+		print(file.name, file.pk, file.file.path)
+	return redirect('drive_home')

@@ -1,9 +1,55 @@
 {% extends 'basic.html' %}
 {% block title %}My Drive{% endblock %}
+
 {% block body %}
+    <style>
+        {#html, body {#}
+        {#    height: 100%;#}
+        {#    min-height: 100vh;#}
+
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 20%; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+
     {% load humanize %}
     <h2>Welcome, {{ user.username }}</h2>
-    <p>
     <form id="file_upload_form" method="post"
           action="{% url 'file_upload_view' path=current_path %}"
           enctype="multipart/form-data">
@@ -45,7 +91,6 @@
                         Create Folder
                     </a>
                 </div>
-
             </div>
         </form>
     </div>
@@ -121,6 +166,7 @@
         <thead>
         <tr>
             <td>Name</td>
+            <td>Rename</td>
             <td>Size</td>
             <td>Download</td>
             <td>Share</td>
@@ -132,6 +178,7 @@
             <tr>
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
+                <td></td>
                 <td> {{ folder.size|filesizeformat }} </td>
                 <td><a href="{% url 'folder_download' folder.pk %}" download> <i class="small material-icons"
                                                                                  style="font-size: 40px">cloud_download </i>
@@ -157,6 +204,33 @@
                     {% endif %}
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}
                     </a></td>
+                <td>
+                    <a href="#" id="renameBtn">
+                        <i class="small material-icons">edit </i>
+                    </a>
+                    <div id="renameBox" class="modal">
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <p>
+                            <h5>Rename</h5>
+                            <form method="post" action="{% url 'rename_file' file.pk %}" id="file_rename_form"
+                                  enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="input-field">
+                                    <i class="material-icons prefix">mode_edit</i>
+                                    <input type="text" name="file_name_new" id="file_name_new"
+                                           placeholder="{{ file.name }}"
+                                           class="validate" required value="{{ file.name }}">
+                                    <a class="waves-effect waves-light btn-small" id="file_rename_btn">Rename</a>
+                                </div>
+                            </form>
+
+                            </p>
+                        </div>
+
+                    </div>
+                </td>
                 <td> {{ file.file_size|filesizeformat }} </td>
                 {#                <td><a href="{% url 'file_download' path=file.file.url %}"> <i class="small material-icons" style="font-size: 40px">cloud_download </i> </a></td>#}
                 <td><a href="{% url 'file_download' file.pk %}" download=>
@@ -185,4 +259,39 @@
         {% endfor %}
         </tbody>
     </table>
+
+
+
+    <script>
+        const box = document.getElementById("renameBox");
+        const btn = document.getElementById("renameBtn");
+        const span = document.getElementsByClassName("close")[0];
+        const container = document.getElementById("container");
+
+        btn.onclick = function () {
+            box.style.display = "block";
+        };
+        span.onclick = function () {
+            box.style.display = "none";
+        };
+        window.onclick = function (event) {
+            if (event.target === box) {
+                box.style.display = "none";
+            }
+        }
+
+        const file_rename_form = document.getElementById("file_rename_form");
+        const file_name_new = document.getElementById("file_name_new");
+        const file_rename_btn = document.getElementById("file_rename_btn");
+
+        file_rename_btn.onclick = function () {
+            console.log(file_name_new);
+            if (file_name_new.value === "") {
+                file_name_new.placeholder = "Folder Name cannot be Empty";
+                file_name_new.classList.add("empty-data");
+                return false;
+            }
+            file_rename_form.submit();
+        }
+    </script>
 {% endblock %}
