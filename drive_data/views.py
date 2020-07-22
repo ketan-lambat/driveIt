@@ -305,12 +305,33 @@ def streaming_file_upload(request, guid):
 def file_rename_view(request, pk):
 	if request.method == "POST":
 		file = File.objects.get(author=request.user, pk=pk)
+		parent = file.location
 		new_name = request.POST['file_name_new']
 		print(file.name, file.pk, file.file.path)
 		old_path = settings.MEDIA_ROOT + '/uploads/' + file.name
 		new_path = settings.MEDIA_ROOT + '/uploads/' + new_name
 		os.rename(old_path, new_path)
 		file.name = new_name
+		file.file = new_path
 		file.save()
 		print(file.name, file.pk, file.file.path)
+		if parent == request.user.drive:
+			return redirect("drive_home")
+		return redirect("folder_data", parent.urlpath)
+	return redirect('drive_home')
+
+
+@login_required
+def folder_rename_view(request, pk):
+	if request.method == "POST":
+		folder = Folder.objects.get(author=request.user, pk=pk)
+		parent = folder.location
+		new_name = request.POST['file_name_new']
+		print(folder.name, folder.pk)
+		folder.name = new_name
+		folder.save()
+		print(folder.name, folder.pk)
+		if parent == request.user.drive:
+			return redirect("drive_home")
+		return redirect("folder_data", parent.urlpath)
 	return redirect('drive_home')

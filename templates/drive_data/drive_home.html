@@ -178,7 +178,34 @@
             <tr>
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
-                <td></td>
+                <td>
+                    <a href="#" id="renameBtn">
+                        <i class="small material-icons">edit </i>
+                    </a>
+                    <div id="renameBox" class="modal">
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <p>
+                            <h5>Rename</h5>
+                            <form method="post" action="{% url 'rename_folder' pk=folder.pk %}"
+                                  id="file_rename_form"
+                                  enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="input-field">
+                                    <i class="material-icons prefix">mode_edit</i>
+                                    <input type="text" name="file_name_new" id="file_name_new"
+                                           placeholder="{{ folder.name }}"
+                                           class="validate" required value="{{ folder.name }}">
+                                    <a class="waves-effect waves-light btn-small" id="file_rename_btn">Rename</a>
+                                </div>
+                            </form>
+
+                            </p>
+                        </div>
+
+                    </div>
+                </td>
                 <td> {{ folder.size|filesizeformat }} </td>
                 <td><a href="{% url 'folder_download' folder.pk %}" download> <i class="small material-icons"
                                                                                  style="font-size: 40px">cloud_download </i>
@@ -205,7 +232,7 @@
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}
                     </a></td>
                 <td>
-                    <a href="#" id="renameBtn">
+                    <a href="#" id="renameBtn" onclick="renameBtn()">
                         <i class="small material-icons">edit </i>
                     </a>
                     <div id="renameBox" class="modal">
@@ -214,7 +241,8 @@
                             <span class="close">&times;</span>
                             <p>
                             <h5>Rename</h5>
-                            <form method="post" action="{% url 'rename_file' file.pk %}" id="file_rename_form"
+                            <form method="post" action="{% url 'rename_file' pk=file.pk %}"
+                                  id="file_rename_form" onclick="itemRename()"
                                   enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="input-field">
@@ -222,7 +250,10 @@
                                     <input type="text" name="file_name_new" id="file_name_new"
                                            placeholder="{{ file.name }}"
                                            class="validate" required value="{{ file.name }}">
-                                    <a class="waves-effect waves-light btn-small" id="file_rename_btn">Rename</a>
+                                    <button type="submit" class="waves-effect waves-light btn-small"
+                                            id="file_rename_btn">Rename
+                                    </button>
+                                    {#                                    <a class="waves-effect waves-light btn-small" id="file_rename_btn">Rename</a>#}
                                 </div>
                             </form>
 
@@ -268,6 +299,10 @@
         const span = document.getElementsByClassName("close")[0];
         const container = document.getElementById("container");
 
+        function renameBtn() {
+            box.style.display = "block";
+        }
+
         btn.onclick = function () {
             box.style.display = "block";
         };
@@ -278,6 +313,16 @@
             if (event.target === box) {
                 box.style.display = "none";
             }
+        }
+
+        function itemRename() {
+            console.log(file_name_new);
+            if (file_name_new.value === "") {
+                file_name_new.placeholder = "Folder Name cannot be Empty";
+                file_name_new.classList.add("empty-data");
+                return false;
+            }
+            file_rename_form.submit();
         }
 
         const file_rename_form = document.getElementById("file_rename_form");
