@@ -31,3 +31,28 @@ class BlogHomePageTest(TestCase):
     def test_blog_title(self):
         response = self.client.get("/blog/")
         self.assertContains(response, "<title>blog|tdrive</title>")
+
+
+class BlogPostFormTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username="testuser", password="test.pass"
+        )
+        self.client.login(username="testuser", password="test.pass")
+
+    def test_blogpost_template(self):
+        response = self.client.get("/blog/post/form/")
+        self.assertTemplateUsed(response, "blog/post_form.html")
+
+class BlogMyPostTest(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(
+            username="testuser", password="test.pass"
+        )
+        self.client.login(username="testuser", password="test.pass")
+
+    def test_blogmypost_template(self):
+        response = self.client.get("/blog/my-posts")
+        self.assertTemplateUsed(response, "blog/my_posts.html")
