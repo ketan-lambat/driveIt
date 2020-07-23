@@ -70,7 +70,8 @@
     <div class="row">
         <a href="#" class="btn-small" id="file_upload_button"><i
                 class="material-icons right">file_upload</i>Upload File</a>
-        <a href="#" class="btn-small" id="create_folder"><i class="material-icons right">create_new_folder</i>Create
+        <a href="#" class="btn-small" id="create_folder"><i
+                class="material-icons right">create_new_folder</i>Create
         </a>
         <a href="#" class="btn-small" id="streaming_upload_button"><i class="material-icons
     right">file_upload</i>Large File Upload</a>
@@ -169,6 +170,23 @@
         {% endfor %}
 
     </h3>
+    <div class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>
+            <h5>Rename</h5>
+            <input name="pk" type="text" value="" hidden id="rename_item_id">
+            <div class="input-field">
+                <i class="material-icons prefix">mode_edit</i>
+                <input type="text" name="file_name_new" id="file_name_new"
+                       placeholder=""
+                       class="validate" required value="">
+                <a class="waves-effect waves-light btn-small"
+                   id="file_rename_btn">Rename</a>
+            </div>
+            </p>
+        </div>
+    </div>
     <table class="striped">
         <thead>
         <tr>
@@ -185,10 +203,16 @@
             <tr>
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
-                <td></td>
+                <td>
+                    <a href="#" class="renameBtn" data-id="{{ folder.pk }}"
+                       data-name="{{ folder.name }}">
+                        <i class="small material-icons">edit </i>
+                    </a>
+                </td>
                 <td> {{ folder.size|filesizeformat }} </td>
-                <td><a href="{% url 'folder_download' folder.pk %}" download> <i class="small material-icons"
-                                                                                 style="font-size: 40px">cloud_download </i>
+                <td><a href="{% url 'folder_download' folder.pk %}" download> <i
+                        class="small material-icons"
+                        style="font-size: 40px">cloud_download </i>
 
                 </a></td>
                 <td><a href="{% url 'share_item' folder.pk %}"><i
@@ -213,37 +237,26 @@
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}
                     </a></td>
                 <td>
-                    <a href="#" id="renameBtn">
+                    <a href="#" class="renameBtn" data-id="{{ file.pk }}"
+                       data-name="{{ file.name }}">
                         <i class="small material-icons">edit </i>
                     </a>
-                    <div id="renameBox" class="modal">
-                        <!-- Modal content -->
-                        <div class="modal-content">
-                            <span class="close">&times;</span>
-                            <p>
-                            <h5>Rename</h5>
-                            <form method="post" action="{% url 'rename_file' file.pk %}" id="file_rename_form"
-                                  enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="input-field">
-                                    <i class="material-icons prefix">mode_edit</i>
-                                    <input type="text" name="file_name_new" id="file_name_new"
-                                           placeholder="{{ file.name }}"
-                                           class="validate" required value="{{ file.name }}">
-                                    <a class="waves-effect waves-light btn-small" id="file_rename_btn">Rename</a>
-                                </div>
-                            </form>
-
-                            </p>
-                        </div>
-
-                    </div>
                 </td>
+
                 <td> {{ file.file_size|filesizeformat }} </td>
-                <td><a href="{% url 'file_download' file.pk %}" download=>
-                    <i class="small material-icons"
-                       style="font-size: 40px">cloud_download </i>
-                </a></td>
+                <td>                    {% if file.file %}
+                    <a href="{{ file.file.url }}" target="_blank">
+                        <i class="small material-icons"
+                           style="font-size: 40px">cloud_download</i>
+                    </a>
+                {% else %}
+                    <a href="{% url 'streaming_upload' file.temp_file_id %}"
+                       target="_blank">
+                        <i class="small material-icons"
+                           style="font-size: 40px">cloud_upload</i>
+                    </a>
+                {% endif %}
+                </td>
                 <td>
                     {% if file.file %}
                         <a href="{% url 'share_item' file.pk %}" target="_blank">
@@ -266,25 +279,34 @@
     </table>
 
     <script>
-        const box = document.getElementById("renameBox");
-        const btn = document.getElementById("renameBtn");
+        const box = document.getElementsByClassName("modal")[0];
+        let btns = document.getElementsByClassName("renameBtn");
+
         const span = document.getElementsByClassName("close")[0];
         const container = document.getElementById("container");
 
-        btn.onclick = function () {
-            box.style.display = "block";
-        };
+        for (let i = 0; i < btns.length; i++) {
+            btns[i].onclick = function () {
+                document.getElementById('rename_item_id').value = btns[i]
+                    .getAttribute('data-id');
+                document.getElementById('file_name_new').value = btns[i]
+                    .getAttribute('data-name')
+                box.style.display = "block";
+            }
+        }
+
         span.onclick = function () {
             box.style.display = "none";
         };
+
         window.onclick = function (event) {
             if (event.target === box) {
                 box.style.display = "none";
             }
         }
 
-        const file_rename_form = document.getElementById("file_rename_form");
         const file_name_new = document.getElementById("file_name_new");
+        const file_rename_id = document.getElementById("rename_item_id");
         const file_rename_btn = document.getElementById("file_rename_btn");
 
         file_rename_btn.onclick = function () {
@@ -294,7 +316,20 @@
                 file_name_new.classList.add("empty-data");
                 return false;
             }
-            file_rename_form.submit();
+            let data = new FormData();
+
+            data.append('item_id', file_rename_id.value);
+            data.append('file_name_new', file_name_new.value);
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', '{% url 'rename_item' %}', true);
+            xhr.onload = function () {
+                if (xhr.status == 200) {
+                    location.reload();
+
+                }
+            };
+            xhr.send(data);
         }
     </script>
 {% endblock %}

@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import urlunquote as urldecode
 from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, ListView, CreateView, View
+from drive_data.models import File, Folder, Item
 from django.conf import settings
 import os
 from drive_data.models import File, Folder
@@ -168,6 +170,27 @@ def folder_delete_view(request, pk):
     return redirect("drive_home")
 
 
+# def file_download_view(request, path):
+# 	print(path)
+# 	if request.method == "GET":
+# 		try:
+# 			file_path = os.path.join(settings.MEDIA_ROOT + "/uploads/", path)
+# 			print("file_path" + file_path)
+# 			if os.path.exists(file_path):
+# 				with open(file_path, 'rb') as fh:
+# 					response = HttpResponse(fh.read())
+# 					response['Content-Type'] = 'text/plain'
+# 					response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
+# 					return response
+# 			raise Http404
+# 		except:
+# 			return HttpResponse("File does not exist.")
+#
+# 	else:
+# 		# return HttpResponse("Not Allowed")
+# 		return redirect("drive_home")
+
+
 @login_required
 def file_download_view(request, pk):
     file = File.objects.get(author=request.user, pk=pk)
@@ -224,36 +247,22 @@ def streaming_file_upload(request, guid):
 
 
 @login_required
-def file_rename_view(request, pk):
+@csrf_exempt
+def rename_item_view(request):
     if request.method == "POST":
-        file = File.objects.get(author=request.user, pk=pk)
-        parent = file.location
-        new_name = request.POST['file_name_new']
-        print(file.name, file.pk, file.file.path)
-        old_path = settings.MEDIA_ROOT + '/uploads/' + file.name
-        new_path = settings.MEDIA_ROOT + '/uploads/' + new_name
-        os.rename(old_path, new_path)
-        file.name = new_name
-        file.file = new_path
-        file.save()
-        print(file.name, file.pk, file.file.path)
-        if parent == request.user.drive:
-            return redirect("drive_home")
-        return redirect("folder_data", parent.urlpath)
-    return redirect('drive_home')
+        try:
+            new_name = request.POST['file_name_new']
+            pk = request.POST['item_id']
+        except KeyError as e:
+            return HttpResponse(status=400)
+        item = Item.objects.get(author=request.user, pk=pk)
+        if hasattr(item, 'drive_file'):
+            file = item.drive_file
+            file.name = new_name
+            file.save()
+        elif hasattr(item, 'drive_folder'):
+            folder = item.drive_folder
+            folder.name = new_name
+            folder.save()
+    return HttpResponse(status=200)
 
-
-@login_required
-def folder_rename_view(request, pk):
-    if request.method == "POST":
-        folder = Folder.objects.get(author=request.user, pk=pk)
-        parent = folder.location
-        new_name = request.POST['file_name_new']
-        print(folder.name, folder.pk)
-        folder.name = new_name
-        folder.save()
-        print(folder.name, folder.pk)
-        if parent == request.user.drive:
-            return redirect("drive_home")
-        return redirect("folder_data", parent.urlpath)
-    return redirect('drive_home')
