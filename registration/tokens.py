@@ -7,13 +7,14 @@ from django.utils.http import base36_to_int
 
 
 class RegistrationTokenGenerator(PasswordResetTokenGenerator):
-
     def __init__(self, __timeout=settings.REGISTRATION_RESET_TIMEOUT):
         self.__timeout = __timeout
         super().__init__()
 
     def make_token(self, user):
-        return self._make_token_with_timestamp(user, self._num_seconds(self._now()))
+        return self._make_token_with_timestamp(
+            user, self._num_seconds(self._now())
+        )
 
     def check_token(self, user, token):
         if not (user and token):
@@ -26,10 +27,11 @@ class RegistrationTokenGenerator(PasswordResetTokenGenerator):
             ts = base36_to_int(ts_b36)
         except ValueError:
             return False
-        if not constant_time_compare(self._make_token_with_timestamp(user, ts), token):
+        if not constant_time_compare(
+            self._make_token_with_timestamp(user, ts), token
+        ):
             if not constant_time_compare(
-                    self._make_token_with_timestamp(user, ts, legacy=True),
-                    token,
+                self._make_token_with_timestamp(user, ts, legacy=True), token,
             ):
                 return False
         if (self._num_seconds(self._now()) - ts) > self.__timeout:
@@ -41,7 +43,12 @@ class RegistrationTokenGenerator(PasswordResetTokenGenerator):
         return int((dt - datetime(2001, 1, 1)).total_seconds())
 
     def _make_hash_value(self, user, timestamp):
-        return str(user.pk) + str(user.email) + str(user.is_active) + str(timestamp)
+        return (
+            str(user.pk)
+            + str(user.email)
+            + str(user.is_active)
+            + str(timestamp)
+        )
 
     def _now(self):
         return datetime.now()

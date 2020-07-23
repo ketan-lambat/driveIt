@@ -2,18 +2,37 @@ from smtplib import SMTPException
 
 from base.decorators import run_in_background
 from django.conf import settings
-from django.core.mail import send_mail as django_smtp_send_mail, get_connection, EmailMultiAlternatives
+from django.core.mail import (
+    send_mail as django_smtp_send_mail,
+    get_connection,
+    EmailMultiAlternatives,
+)
 
 
-def smtp_send_mail(subject, message, html_message, recipient_list, from_email=settings.DEFAULT_FROM_EMAIL,
-                   fail_silently=True):
+def smtp_send_mail(
+    subject,
+    message,
+    html_message,
+    recipient_list,
+    from_email=settings.DEFAULT_FROM_EMAIL,
+    fail_silently=True,
+):
     """
     Returns:
         Number of mail sent successfully or None if failed
     """
     try:
-        return django_smtp_send_mail(subject, message, from_email, recipient_list, False, None, None, None,
-                                     html_message)
+        return django_smtp_send_mail(
+            subject,
+            message,
+            from_email,
+            recipient_list,
+            False,
+            None,
+            None,
+            None,
+            html_message,
+        )
     except SMTPException:
         if not fail_silently:
             print("Unable to send SMTP Mail.")
@@ -25,7 +44,9 @@ def smtp_send_mass_mail(data_tuples, fail_silently=True):
     Returns:
         Number of mail sent successfully or None if failed
     """
-    connection = get_connection(username=None, password=None, fail_silently=fail_silently)
+    connection = get_connection(
+        username=None, password=None, fail_silently=fail_silently
+    )
     messages = []
     for data in data_tuples:
         if len(data) == 4:
@@ -36,8 +57,10 @@ def smtp_send_mass_mail(data_tuples, fail_silently=True):
         else:
             print("SMTP Mail not send: too few or too many arguments.")
             continue
-        message = EmailMultiAlternatives(subject, message, from_email, recipient_list)
-        message.attach_alternative(html_message, 'text/html')
+        message = EmailMultiAlternatives(
+            subject, message, from_email, recipient_list
+        )
+        message.attach_alternative(html_message, "text/html")
         messages.append(message)
     try:
         return connection.send_messages(messages)
@@ -48,7 +71,14 @@ def smtp_send_mass_mail(data_tuples, fail_silently=True):
 
 
 @run_in_background
-def send_mail(subject, message, html_message, recipient_list, from_email=None, fail_silently=True):
+def send_mail(
+    subject,
+    message,
+    html_message,
+    recipient_list,
+    from_email=None,
+    fail_silently=True,
+):
     """
         Send a Single mail to one or more users
 
@@ -64,7 +94,14 @@ def send_mail(subject, message, html_message, recipient_list, from_email=None, f
     """
     if not from_email:
         from_email = settings.DEFAULT_FROM_EMAIL
-    return smtp_send_mail(subject, message, html_message, recipient_list, from_email, fail_silently)
+    return smtp_send_mail(
+        subject,
+        message,
+        html_message,
+        recipient_list,
+        from_email,
+        fail_silently,
+    )
 
 
 @run_in_background

@@ -7,11 +7,13 @@ import re
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="profile"
+    )
     pass
 
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, **kwargs):
-    if kwargs.get('created', False):
+    if kwargs.get("created", False):
         Profile.objects.create(user=instance)

@@ -16,16 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.generic.base import RedirectView
+
+favicon_view = RedirectView.as_view(url='/static/favicon.ico', permanent=True)
 
 urlpatterns = [
-
-                  path('', include('registration.urls')),
-                  path('drive/', include('drive_data.urls')),
-                  path('blog/', include('blog.urls')),
-                  # path('', include('accounts.urls')),
-                  path('admin/', admin.site.urls),
-              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path("", include("registration.urls")),
+    path("", include("share.urls")),
+    path('blog/', include('blog.urls')),
+    re_path(r"^", include("uploads.urls")),
+    path("drive/", include("drive_data.urls")),
+    # path('', include('accounts.urls')),
+    path("admin/", admin.site.urls),
+    path("favicon.ico", favicon_view),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,87 @@
+{% extends 'basic.html' %}
+{% load static %}
+{% block title %}
+    Share File
+{% endblock %}
+
+{% block body %}
+    <h2>Share Item: <a href="{% url 'folder_data' item.location %}"
+    >{{ item.name }}</a></h2>
+    {% if shared %}
+        <h4>Link: <a href="{{ shared.link }}">{{ shared.link }}</a>
+        </h4>
+        <br>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label>
+                <input name="type" value="1" type="radio" id="public_radio"
+                        {% if not shared or shared.permission == shared.Permission.PUBLIC %}
+                       checked
+                        {% endif %}
+                       checked/>
+                <span>Public</span>
+            </label>
+        </p>
+        <p>
+            <label>
+                <input name="type" value="2" type="radio" id="selected_radio"
+                        {% if shared and shared.permission == shared.Permission.SELECTIVE %}
+                       checked
+                        {% endif %}/>
+                <span>Selected List</span>
+            </label>
+        </p>
+
+        <br>
+
+        <div class="input-field col s12">
+            <select name="users" multiple id="participants_select"
+                    {% if shared.permission == shared.Permission.PUBLIC %} disabled
+                    {% endif %}>
+                <option value="" disabled selected>Choose your option</option>
+                {% for user in users %}
+                    <option value="{{ user.username }}"
+                            {% if user in shared.access_user.all %}
+                            selected {% endif %}
+                    >{{ user.first_name }}
+                        {{ user.last_name }}</option>
+                {% endfor %}
+            </select>
+            <label>Materialize Multiple Select</label>
+        </div>
+        <br>
+        <input type="submit" value="Share" class="btn-small">
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems, [1, 2, 3,]);
+        });
+        document.getElementById('selected_radio').onchange = function () {
+            if (document.getElementById('selected_radio').checked) {
+                document.getElementById('participants_select').removeAttribute
+                ('disabled');
+            } else {
+                document.getElementById('participants_select').setAttribute
+                ('disabled', '');
+            }
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems, []);
+        }
+        document.getElementById('public_radio').onchange = function () {
+            if (document.getElementById('selected_radio').checked) {
+                document.getElementById('participants_select').removeAttribute
+                ('disabled');
+            } else {
+                document.getElementById('participants_select').setAttribute
+                ('disabled', '');
+            }
+            var elems = document.querySelectorAll('select');
+            var instances = M.FormSelect.init(elems, []);
+        }
+    </script>
+{% endblock %}
+
+
