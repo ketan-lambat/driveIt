@@ -194,12 +194,6 @@
                 <td><a href="{% url 'share_item' folder.pk %}"><i
                         class="material-icons left">share</i></a></td>
                 <td>
-{#                    <form method="post" action="{% url 'delete_folder' folder.pk %}">#}
-{#                        {% csrf_token %}#}
-                        <button  class="btn-small red"> share</button>
-{#                    </form>#}
-                </td>
-                <td>
                     <form method="post" action="{% url 'delete_folder' folder.pk %}">
                         {% csrf_token %}
                         <button type="submit" class="btn-small red"> Delete</button>
