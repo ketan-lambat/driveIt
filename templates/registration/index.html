@@ -35,6 +35,7 @@
                 top: 50%;
                 transform: translate(-50%, -50%);
             }
+
             div.relative2 {
                 text-align: center;
                 height: 200px;
@@ -45,6 +46,7 @@
                 top: 50%;
                 transform: translate(-50%, -50%);
             }
+
             div.relative1 {
                 text-align: center;
                 height: 100px;
@@ -61,8 +63,9 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto my-2 my-lg-0">
 
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">Meet
-                            Drive</font></a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'team' %}"><font
+                                color="#00bfff">Our
+                            Team</font></a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">Using
                             Drive</font></a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">Download</font></a>
@@ -83,12 +86,12 @@
                 <font color="red" size="50">Welcome, {{ user.username }}</font>
             </h1>
             <h6><font color="white"> ----------------------------</font></h6>
-        <h3><a href="/drive">
-                    Go to TDrive
-                </a></h3>
-        <h3><a href="{% url 'logout' %}">
-                    Logout
-                </a></h3>
+            <h3><a href="/drive">
+                Go to TDrive
+            </a></h3>
+            <h3><a href="{% url 'logout' %}">
+                Logout
+            </a></h3>
         </div>
     {% else %}
         <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
@@ -96,9 +99,10 @@
                 <a class="navbar-brand js-scroll-trigger" href="/"> <font color="white"> Tdrive </font> </a>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto my-2 my-lg-0">
-                      
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">Meet
-                            Drive</font></a></li>
+
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger"
+                                                href="/templates/team/team.html"><font color="#00bfff">Our
+                            Team</font></a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">Using
                             Drive</font></a></li>
                         <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">Download</font></a>
@@ -111,7 +115,7 @@
                 </div>
             </div>
         </nav>
-        
+
         <div class="relative1"></div>
         <div class="relative1"></div>
         <div class="relative">
@@ -120,9 +124,9 @@
                 <font color="red" size="50">A safe place for all your files</font>
             </h1>
             <h6><font color="white"> ----------------------------</font></h6>
-        <h3><a href="{% url 'login_url' %}">
-                    Go to TDrive
-                </a></h3>
+            <h3><a href="{% url 'login_url' %}">
+                Go to TDrive
+            </a></h3>
         </div>
 
 

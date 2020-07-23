@@ -20,5 +20,49 @@
         left">cloud_download</i></a></td>
 
     </table>
+
+    <br>
+    <br>
+
+    {% if is_folder %}
+
+        <table class="striped">
+            <thead>
+            <tr>
+                <td>Name</td>
+                <td>Size</td>
+                <td>Download</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for folder in folders %}
+                <tr>
+                    <td><a href="{% url 'share_folder_data' shared.public_id folder.pk %}"><i
+                            class="material-icons left">folder</i>{{ folder.name }}</a></td>
+                    <td> {{ folder.size|filesizeformat }} </td>
+                    <td><a href="{% url 'download_file' shared.public_id folder.pk %}" download> <i
+                            class="small material-icons"
+                            style="font-size: 40px">cloud_download</i>
+
+                    </a></td>
+                </tr>
+            {% endfor %}
+            {% for file in files %}
+                {% if file.file %}
+                    <tr>
+                        <td>
+                            <a href="{{ file.file.url }}" target="_blank">{{ file.name }}</a>
+                        </td>
+                        <td> {{ file.file_size|filesizeformat }} </td>
+                        <td><a href="{% url 'download_file' shared.public_id file.pk %}" download=>
+                            <i class="small material-icons"
+                               style="font-size: 40px">cloud_download</i>
+                        </a></td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}
 
