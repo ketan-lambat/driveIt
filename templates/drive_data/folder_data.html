@@ -4,13 +4,62 @@
     <style>
         .empty-data::placeholder {
             color: red;
+
+        }
+
+    </style>
+
+    <style>
+        {#html, body {#}
+        {#    height: 100%;#}
+        {#    min-height: 100vh;#}
+
+
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 20%; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0); /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+
+        }
+
+        /* Modal Content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+        }
+
+        /* The Close Button */
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
         }
     </style>
+
 {% endblock %}
 {% block body %}
 
     {% load humanize %}
-    <h2>Welcome, {{ request.user.first_name }}</h2>
+    <h2>Welcome, {{ user.username }}</h2>
     <p>
     <form id="file_upload_form" method="post"
           action="{% url 'file_upload_view' path=current_path %}"
@@ -18,20 +67,28 @@
         {% csrf_token %}
         <input type="file" name="file" id="new_file_upload" hidden>
     </form>
+    <div class="row">
+        <a href="#" class="btn-small" id="file_upload_button"><i
+                class="material-icons right">file_upload</i>Upload File</a>
+        <a href="#" class="btn-small" id="create_folder"><i class="material-icons right">create_new_folder</i>Create
+        </a>
+        <a href="#" class="btn-small" id="streaming_upload_button"><i class="material-icons
+    right">file_upload</i>Large File Upload</a>
+    </div>
     <div id="new_folder"
-         style="position: fixed; left: 45%; top: 12%; background: white; width: 50%; height: 20%;"
-         hidden>
+         style="position: fixed; left: 55%; top: 12%; background: white; width: 50%;
+         height: 20%;" hidden>
         <form class="col s12" id="create_folder_form" method="post"
               action="{% url 'create_folder_view' path=current_path %}">
             {% csrf_token %}
             <div class="row">
                 <div class="row">
-                    <div class="input-field col s6" style="display: inline">
+                    <div class="input-field col s4" style="display: inline">
                         <input type="text" name="folder_name" id="new_folder_name"
                                placeholder="Folder Name"
                                class="validate" required value="New Folder">
                     </div>
-                    <div class="input-field col s6" style="display: inline">
+                    <div class="input-field col s4" style="display: inline">
                         <a href="#" class="btn-small" id="create_folder_button">
                             <i class="material-icons right">create_new_folder</i>
                             Create Folder
@@ -51,12 +108,7 @@
         <input type="text" name="path" id="streaming_file_location" hidden>
     </form>
 
-    <a href="#" class="btn-small" id="file_upload_button"><i
-            class="material-icons right">file_upload</i>Upload File</a>
-    <a href="#" class="btn-small" id="create_folder"><i class="material-icons right">create_new_folder</i>Create
-        Folder</a>
-    <a href="#" class="btn-small" id="streaming_upload_button"><i class="material-icons
-    right">file_upload</i>Large File Upload</a>
+
     <script>
         let fb = document.getElementById("file_upload_button");
         let file = document.getElementById("new_file_upload");
@@ -121,6 +173,7 @@
         <thead>
         <tr>
             <td>Name</td>
+            <td>Rename</td>
             <td>Size</td>
             <td>Download</td>
             <td>Share</td>
@@ -132,10 +185,20 @@
             <tr>
                 <td><a href="{% url 'folder_data' path=folder.urlpath %}"><i
                         class="material-icons left">folder</i>{{ folder.name }}</a></td>
+                <td></td>
                 <td> {{ folder.size|filesizeformat }} </td>
-                <td><a href="{% url 'folder_download' folder.pk %}" download> <i class="small material-icons" style="font-size: 40px">cloud_download </i> </a></td>
+                <td><a href="{% url 'folder_download' folder.pk %}" download> <i class="small material-icons"
+                                                                                 style="font-size: 40px">cloud_download </i>
+
+                </a></td>
                 <td><a href="{% url 'share_item' folder.pk %}"><i
                         class="material-icons left">share</i></a></td>
+                <td>
+{#                    <form method="post" action="{% url 'delete_folder' folder.pk %}">#}
+{#                        {% csrf_token %}#}
+                        <button  class="btn-small red"> share</button>
+{#                    </form>#}
+                </td>
                 <td>
                     <form method="post" action="{% url 'delete_folder' folder.pk %}">
                         {% csrf_token %}
@@ -155,8 +218,35 @@
                     {% endif %}
                     <i class="material-icons left">insert_drive_file</i>{{ file.name }}
                     </a></td>
-                <td> {{ file.file_size|filesizeformat  }} </td>
-                <td><a href="{{ file.file.url }}" download=>
+                <td>
+                    <a href="#" id="renameBtn">
+                        <i class="small material-icons">edit </i>
+                    </a>
+                    <div id="renameBox" class="modal">
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <p>
+                            <h5>Rename</h5>
+                            <form method="post" action="{% url 'rename_file' file.pk %}" id="file_rename_form"
+                                  enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="input-field">
+                                    <i class="material-icons prefix">mode_edit</i>
+                                    <input type="text" name="file_name_new" id="file_name_new"
+                                           placeholder="{{ file.name }}"
+                                           class="validate" required value="{{ file.name }}">
+                                    <a class="waves-effect waves-light btn-small" id="file_rename_btn">Rename</a>
+                                </div>
+                            </form>
+
+                            </p>
+                        </div>
+
+                    </div>
+                </td>
+                <td> {{ file.file_size|filesizeformat }} </td>
+                <td><a href="{% url 'file_download' file.pk %}" download=>
                     <i class="small material-icons"
                        style="font-size: 40px">cloud_download </i>
                 </a></td>
@@ -171,6 +261,7 @@
                 <td>
                     <form method="post" action="{% url 'delete_file' file.pk %}">
                         {% csrf_token %}
+
                         <button type="submit" class="btn-small red"> Delete</button>
                     </form>
 
@@ -179,4 +270,37 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <script>
+        const box = document.getElementById("renameBox");
+        const btn = document.getElementById("renameBtn");
+        const span = document.getElementsByClassName("close")[0];
+        const container = document.getElementById("container");
+
+        btn.onclick = function () {
+            box.style.display = "block";
+        };
+        span.onclick = function () {
+            box.style.display = "none";
+        };
+        window.onclick = function (event) {
+            if (event.target === box) {
+                box.style.display = "none";
+            }
+        }
+
+        const file_rename_form = document.getElementById("file_rename_form");
+        const file_name_new = document.getElementById("file_name_new");
+        const file_rename_btn = document.getElementById("file_rename_btn");
+
+        file_rename_btn.onclick = function () {
+            console.log(file_name_new);
+            if (file_name_new.value === "") {
+                file_name_new.placeholder = "Folder Name cannot be Empty";
+                file_name_new.classList.add("empty-data");
+                return false;
+            }
+            file_rename_form.submit();
+        }
+    </script>
 {% endblock %}

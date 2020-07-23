@@ -1,0 +1,75 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+<header class="masthead" style="background-color:lightgoldenrodyellow;" >
+            <div class="overlay"></div>
+            <div class="container">
+              <div class="row">
+                <div class=" col-md-8 col-md-10 mx-auto">
+                  <div class="site-heading">
+                    <h3 class=" site-heading my-4 mt-3 text-blue"> Welcome,{{ user.username }} </h3>
+                    <p class="text-blue">Welcome to TDrive,in TDrive users can upload, download,share and organize files from any device and the key feature of TDrive is resumable downloads
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+              </header>
+<div class="posts-container">
+    <div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="blog_posts">
+                <h1><b>Latest Posts
+
+                <a id="home-btn" class="btn btn-primary" href="{% url 'post-form' %}">Add Post</a>
+
+            </b></h1>
+                {% for post in posts.object_list %}
+                {% if post.published_on %}
+                <div class="blog-container" id="blog-posts">
+
+                    <div class="post-list">
+                        <h2><a class='post-title' href="{% url 'post-detail' slug=post.slug %}"><b>{{ post.title }}</b></a></h2>
+                        {% if post.edited_on %}
+                        <small>{{ post.edited_on }} | Edited</small>
+                        {% else %}
+                        <small>{{ post.published_on }}</small>
+                        {% endif %}<br>
+                        <small>Posted by {{ post.author }}</small>
+                        <p>{{ post.content | slice:":150" }}</p>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <br>
+                <div>
+                    <nav class="pagination-nav" aria-label="page navigation">
+                    <ul class="pagination">
+                    {% if posts.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{posts.previous_page_number}}">Previous</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#" aria-disabled="true">Previous</a></li>
+                    {% endif %}
+                    {% for pg in posts.paginator.page_range %}
+                    {% if posts.number == pg %}
+                    <li class="page-item active"><a class="page-link" href="?page={{pg}}">{{pg}} <span class="sr-only">(current)</span></a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{pg}}">{{pg}}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if posts.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{posts.next_page_number}}">Next</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#" aria-disabled="true">Next</a></li>
+                    {% endif %}
+                    </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
