@@ -246,7 +246,6 @@ def streaming_file_upload(request, guid):
     return render(request, 'upload/streaming_upload.html', context=context)
 
 
-@login_required
 @csrf_exempt
 def rename_item_view(request):
     if request.method == "POST":
@@ -265,4 +264,3 @@ def rename_item_view(request):
             folder.name = new_name
             folder.save()
     return HttpResponse(status=200)
-

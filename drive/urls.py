@@ -27,6 +27,7 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     re_path(r"^", include("uploads.urls")),
     path("drive/", include("drive_data.urls")),
+    path("base/", include('base.urls')),
     # path('', include('accounts.urls')),
     path("admin/", admin.site.urls),
     path("favicon.ico", favicon_view),
