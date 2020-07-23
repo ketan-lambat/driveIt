@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, FileResponse
 from django.contrib.auth.decorators import login_required
 from drive_data.models import Item
@@ -84,4 +84,6 @@ def download_file(request ,guid, item_id):
             return HttpResponse(status=403)
     if hasattr(shared.item, 'drive_file'):
         return FileResponse(open(shared.item.drive_file.file.path, 'rb'))
+    if hasattr(shared.item, 'drive_folder'):
+        return redirect('folder_download', kwargs={'pk': shared.item.pk})
     return HttpResponse('Coming...')
