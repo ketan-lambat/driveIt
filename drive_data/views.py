@@ -1,34 +1,23 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import urlunquote as urldecode
+from django.views.generic import TemplateView, View
 from django.views.generic import TemplateView, ListView, CreateView, View
 from drive_data.models import File, Folder, Item
 from django.conf import settings
-from shutil import make_archive
-from wsgiref.util import FileWrapper
-from ranged_fileresponse import RangedFileResponse
 import os
-import shutil
-import errno
-import tempfile
-import zipfile
-import mimetypes
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
 from drive_data.models import File, Folder
 from uploads.models import Upload
+
+from drive_data.zip import make_tmp_archive
 
 
 class Home(TemplateView):
     template_name = "basic.html"
-
-
-# Final Drive Views:
 
 
 class DriveDataView(LoginRequiredMixin, View):
@@ -215,8 +204,7 @@ def file_download_view(request, pk):
                     response = HttpResponse(fh.read())
                     response['Content-Type'] = 'application/octet-stream'
                     # response['Content-Range'] = 'bytes='
-                    response[
-                        'Content-Disposition'] = 'attachment; filename="%s"' % filename
+                    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
                     # response['Content-Disposition'] = 'inline; filename="%s"' % file.name
                     return response
             raise Http404
@@ -229,59 +217,14 @@ def file_download_view(request, pk):
 
 @login_required
 def folder_download_view(request, pk):
-    # references
-    # https://gist.github.com/viveksoundrapandi/9600712
-    # https://stackoverflow.com/questions/45088930/can-we-create-directory-in-view-django
-    # https://www.geeksforgeeks.org/python-shutil-copy-method/
-    """
-        A django view to zip files in directory and send it as downloadable response to the browser.
-        Args:
-          @request: Django request object
-          @pk: pk of the directory to be zipped
-        Returns:
-          A downloadable Http response
-        """
     folder = Folder.objects.get(author=request.user, pk=pk)
-    folders = folder.files_folder.all()
-    files = folder.files.all()
 
-    static_dir = settings.MEDIA_ROOT
+    response = make_tmp_archive(folder)
 
-    # creating a tmp folder in media root for zipping
-    tmp_dir_path = os.path.join(static_dir + '/uploads/', folder.name + '/')
-    try:
-        os.makedirs(tmp_dir_path)
-    except PermissionError as e:
-        print("Permission denied.", e)
-    except OSError as e:
-        if e.errno != errno.EEXIST:
-            # directory already exists
-            tmp_dir_path = os.path.join(settings.MEDIA_ROOT + '/uploads/', folder.name)
-        else:
-            print("error:", e)
-
-    for file in files:
-        shutil.copy(file.file.path, tmp_dir_path)
-        print(file.file.path)
-    # root_tmp_path = tmp_dir_path
-    # for folder in folders:
-    # 	os.makedirs(tmp_dir_path + folder.name)
-
-    print("tmp dir path: ", tmp_dir_path)
-    path_to_zip = make_archive(tmp_dir_path, "zip", tmp_dir_path)
-
-    response = HttpResponse(FileWrapper(open(path_to_zip, 'rb')),
-                            content_type='application/zip')
-    # response['']
-    response['Content-Disposition'] = 'attachment; filename="{filename}.zip"'.format(
-        filename=folder.name.replace(" ", "_")
-    )
-    # Removing a directory
-    try:
-        shutil.rmtree(tmp_dir_path)
-    except OSError as e:
-        print(e)
-    return response
+    if response is not None:
+        return response
+    else:
+        return HttpResponse(status=500)
 
 
 @csrf_exempt
