@@ -25,6 +25,16 @@ class Item(models.Model):
         else:
             return 0
 
+    def has_parent(self, pid):
+        if self.pk == pid:
+            return True
+        else:
+            if hasattr(self, 'drive_file'):
+                loc = self.drive_file.location
+            elif hasattr(self, 'drive_folder'):
+                loc = self.drive_folder.location
+        return loc.has_parent(pid)
+
 
 class File(Item):
     file = models.FileField(upload_to="uploads/", null=True, default=None)
