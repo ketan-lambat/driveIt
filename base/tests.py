@@ -18,3 +18,7 @@ class OurTeamPageTest(TestCase):
     def test_teampage_template(self):
         response = self.client.get("/base/team/")
         self.assertTemplateUsed(response, "team/team.html")
+
+    def test_teampage_title(self):
+        response = self.client.get("/base/team/")
+        self.assertContains(response, "<title>Our Team</title>")

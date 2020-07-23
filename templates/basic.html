@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     {% block head %} {% endblock %}
 
@@ -19,20 +19,23 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
-            <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href=""><font color="white"> Tdrive </font> </a>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto my-2 my-lg-0">
+    <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href=""><font color="white"> Tdrive </font> </a>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto my-2 my-lg-0">
 
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">home</font></a></li>
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/blog/"><font color="#00bfff">blog</font></a></li>
-                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'logout' %}"><font color="#00bfff">Logout</font></a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font
+                        color="#1976d2">Home</font></a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/blog/"><font
+                        color="#1976d2">Blog</font></a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="{% url 'logout' %}"><font
+                        color="#1976d2">Logout</font></a></li>
 
 
-                    </ul>
-                </div>
-            </div>
-        </nav>
+            </ul>
+        </div>
+    </div>
+</nav>
 <br><br><br><br>
 <div class="container" id="container">
     {% block body %}
