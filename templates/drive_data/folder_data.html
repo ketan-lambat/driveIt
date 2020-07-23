@@ -4,7 +4,9 @@
     <style>
         .empty-data::placeholder {
             color: red;
+
         }
+
     </style>
 
     <style>
@@ -74,8 +76,8 @@
     right">file_upload</i>Large File Upload</a>
     </div>
     <div id="new_folder"
-         style="position: fixed; left: 50%; top: 12%; background: transparent; width: 50%; height: 20%;"
-         hidden>
+         style="position: fixed; left: 55%; top: 12%; background: white; width: 50%;
+         height: 20%;" hidden>
         <form class="col s12" id="create_folder_form" method="post"
               action="{% url 'create_folder_view' path=current_path %}">
             {% csrf_token %}
@@ -187,9 +189,16 @@
                 <td> {{ folder.size|filesizeformat }} </td>
                 <td><a href="{% url 'folder_download' folder.pk %}" download> <i class="small material-icons"
                                                                                  style="font-size: 40px">cloud_download </i>
+
                 </a></td>
                 <td><a href="{% url 'share_item' folder.pk %}"><i
                         class="material-icons left">share</i></a></td>
+                <td>
+{#                    <form method="post" action="{% url 'delete_folder' folder.pk %}">#}
+{#                        {% csrf_token %}#}
+                        <button  class="btn-small red"> share</button>
+{#                    </form>#}
+                </td>
                 <td>
                     <form method="post" action="{% url 'delete_folder' folder.pk %}">
                         {% csrf_token %}
@@ -252,6 +261,7 @@
                 <td>
                     <form method="post" action="{% url 'delete_file' file.pk %}">
                         {% csrf_token %}
+
                         <button type="submit" class="btn-small red"> Delete</button>
                     </form>
 

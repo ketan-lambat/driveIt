@@ -1,0 +1,257 @@
+body{
+    font-family: 'Quicksand', sans-serif;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    background-image: url("https://wallpaper-house.com/data/out/12/wallpaper2you_486244.jpg");
+    background-size: cover;
+        background-repeat: no-repeat;
+        height: 100%;
+
+}
+.navbar-brand{
+     color: green;
+     font-weight: bold;
+     font-size: 1.5em;
+}
+.bd-navbar{
+    max-width: 100%;
+}
+.dropdown-menu{
+    border-radius: 10px;
+    width: 100px !important;
+}
+.backToHome{
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-left: 200px;
+}
+.backToHome:hover{
+    text-decoration: none;
+}
+
+#img-home{
+    margin-right: 15px;
+    float: left;
+}
+#img-postdetail{
+    vertical-align: bottom;
+}
+.nav-link{
+    color: #ffffff;
+}
+.nav-link:hover{
+    color: #277527;
+}
+
+
+.col-md-8{
+    margin-top: 30px;
+    background-color: #000000;
+}
+.bd-navbar{
+    background-color: #000000;
+}
+.nav-items{
+    font-size: 1.1em;
+    float: right;
+}
+.post-list{
+    min-height: 180px;
+    word-wrap: break-word;
+}
+#home-btn{
+    height: 25px;
+    line-height: 10px;
+}
+.blog_posts h1,h2{
+    color: #ffffff;
+}
+small{
+    color: #cccccc;
+}
+p{
+    color: #ffffff;
+}
+.pagination-nav{
+    text-align: center;
+}
+.container{
+    min-height:100%;
+}
+#blog-posts{
+     margin-top: 5px;
+     padding-top: 20px;
+     padding-bottom: 10px;
+     border-bottom: 1px solid #808080;
+}
+.post-content{
+    word-wrap: break-word;
+}
+.container-form form{
+    margin: 0 auto;
+    width: 700px;
+}
+.modal{
+    color: #000000;
+}
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+.content-width {
+    margin: 0px auto 20px auto;
+    background-color: white;
+    width: 86%;
+}
+.heading{
+    margin-left: 40px;
+}
+.slideshow {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.slideshow-items {
+    position: relative;
+    width: 100%;
+    height: 300px;
+}
+
+.item {
+    position: absolute;
+    width: 100%;
+    height: 500px;
+}
+
+.item-image-container {
+    margin-left: 50px;
+
+    position: relative;
+    width: 42%;
+}
+
+.item-image-container::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 101%;
+    height: 101%;
+    background: #22222A;
+    opacity: 0;
+    z-index: 1;
+}
+
+.item-image {
+    position: relative;
+    opacity: 0;
+    display: block;
+    transition: opacity .3s ease-out .45s;
+}
+
+.item.active .item-image {
+    opacity: 1;
+}
+
+.item.active .item-image-container::before {
+    opacity: 0;
+}
+
+.item-description {
+    position: absolute;
+    top: 100px;
+    right: 0;
+    width: 50%;
+    padding-right: 4%;
+    line-height: 1.8;
+}
+
+  /* Staggered Vertical Items ------------------------------------------------------*/
+.item-header {
+    position: absolute;
+    margin-left: 35px;
+    top: 150px;
+    left: 1.8%;
+    z-index: 100;
+}
+
+.item-header .vertical-part {
+    margin: 0 -4px;
+    font-family: 'Montserrat', sans-serif;
+    -webkit-font-smoothing: auto;
+    font-size: 7vw;
+    color: #fff;
+}
+
+.heading{
+    font-size: 500%;
+}
+
+.vertical-part {
+    overflow: hidden;
+    display: inline-block;
+}
+
+.vertical-part b {
+    display: inline-block;
+    transform: translateY(100%);
+}
+
+.item-header .vertical-part b{
+    transition: .5s;
+}
+
+.item-description .vertical-part b{
+    transition: .21s;
+    font-size: 1.2em;
+}
+
+.item.active .item-header .vertical-part b {
+    transform: translateY(0);
+}
+
+.item.active .item-description .vertical-part b{
+    transform: translateY(0);
+}
+
+  /* Controls ----------------------------------------------------------------------*/
+.controls {
+    position: relative;
+    z-index: 1000;
+    text-align: right;
+    margin-right: 300px;
+}
+
+.controls ul {
+    list-style: none;
+}
+
+.controls ul li {
+    display: inline-block;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    margin: 3px;
+    background: #bdbdd5;
+    cursor: pointer;
+}
+
+.controls ul li.active {
+    background: #6a6a77;
+}
+@media only screen and (max-width: 768px){
+    .content-width{
+        display: none;
+    }
+    .posts-container{
+        margin-top: 0px;
+    }
+}
