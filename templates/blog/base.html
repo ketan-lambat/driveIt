@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>blog|tdrive</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css\blog.css' %}">
+
+  </head>
+  <body>
+
+  <nav class="navbar navbar-expand-lg bd-navbar">
+  <a href="{% url 'home' %}" class="navbar-brand"><font color="#FF0000">Tdrive</font></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav nav-items">
+      <a href="/" class="dropdown-item"><font color="#00bfff">Home</font></a>
+<a href="{% url 'post-form' %}" class="dropdown-item"><font color="#00bfff">Add Post</font></a>
+      <a href="/blog/" class="dropdown-item"><font color="#00bfff">All Posts</font></a>
+      <a class="dropdown-item" href="{% url 'my-posts' %}"><font color="#00bfff">My Post</font></a>
+      <a href="/logout/" class="dropdown-item"><font color="#00bfff">Logout</font></a>
+        </ul>
+  </div>
+</nav>
+
+
+      {% block content %}
+
+      {% endblock %}
+  </body>
+
+</html>

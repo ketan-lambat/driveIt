@@ -1,3 +1,4 @@
+
 """
 Django settings for drive project.
 
@@ -46,6 +47,7 @@ ALLOWED_HOSTS = [
 # Application definition
 
 INSTALLED_APPS = [
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -61,6 +63,7 @@ INSTALLED_APPS = [
     "accounts",
     "drive_data",
     'share',
+  	'blog',
     "crispy_forms",
     "django_cleanup",  # for file/folder delete
 ]

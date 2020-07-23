@@ -1,0 +1,34 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="blog_posts">
+                {% if post.published_on %}
+                <h2 class="post-title"><b>{{ post.title }}</b></h2>
+                <small>Posted by {{ post.author }}</small><br>
+                <small>Published on {{ post.published_on }}</small><br><br>
+
+                <div class="post-content">
+                <p>{{ post.content | linebreaks}}</p>
+                </div>
+                <br>
+                {% if user.is_authenticated %}
+                {% if user == post.author %}
+                <form action="{% url 'post-edit' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" value="{{post.slug}}" name="slug" hidden>
+                <button class="btn btn-primary" type="submit"><span class="glyphicon glyphicon-edit"></span> Edit</button>
+                <a class="btn btn-danger" href="{% url 'post-delete' slug=post.slug %}"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+                {% endif %}
+                {% endif %}
+                </form>
+                <br>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

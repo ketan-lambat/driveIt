@@ -1,0 +1,60 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="blog_posts">
+                <h1><b>Your Posts
+
+                <a id="home-btn" class="btn btn-primary" href="{% url 'post-form' %}">Add Post</a>
+
+            </b></h1>
+
+                {% for post in posts %}
+                {% if post.published_on %}
+                <div class="blog-container" id="blog-posts">
+
+                    <div class="post-list">
+                        <h2><a class='post-title' href="{% url 'post-detail' slug=post.slug %}"><b>{{ post.title }}</b></a></h2>
+                        {% if post.edited_on %}
+                        <small>{{ post.edited_on }} | Edited</small>
+                        {% else %}
+                        <small>{{ post.published_on }}</small>
+                        {% endif %}<br>
+                        <small>Posted by {{ post.author }}</small>
+                        <p>{{ post.content | slice:":150" }}</p>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <br>
+                <div>
+                    <nav class="pagination-nav" aria-label="page navigation">
+                    <ul class="pagination">
+                    {% if posts.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{posts.previous_page_number}}">Previous</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#" aria-disabled="true">Previous</a></li>
+                    {% endif %}
+                    {% for pg in posts.paginator.page_range %}
+                    {% if posts.number == pg %}
+                    <li class="page-item active"><a class="page-link" href="?page={{pg}}">{{pg}} <span class="sr-only">(current)</span></a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{pg}}">{{pg}}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if posts.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{posts.next_page_number}}">Next</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#" aria-disabled="true">Next</a></li>
+                    {% endif %}
+                    </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br><br>
+{% endblock %}

@@ -18,42 +18,73 @@
 
             div.relative {
                 text-align: center;
+                height: 150px;
+                border-style: outset;
+                width: 700px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            div.relative2 {
+                text-align: center;
+                height: 200px;
+                border-style: outset;
+                width: 700px;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            div.relative1 {
+                text-align: center;
                 height: 100px;
             }
-
-            .flex-container {
-                display: flex;
-                flex-wrap: nowrap;
-
-            }
-
-            .flex-container .box {
-                background-color: #f1f1f1;
-                width: 50%;
-                margin: 100px;
-                text-align: center;
-                line-height: 75px;
-                font-size: 20px;
-            {#margin-left: auto;#}{#margin-right: auto;#}
-            }
         </style>
-
     {% endblock %}
 </head>
-<body id="page-top">
+<body>
 {% block content %}
     {% if user.is_authenticated %}
-        <h1>Welcome, {{ user.username }}</h1>
-        <a href="{% url 'drive_home' %}">Go To Drive</a>
-        <br>
-        <a href="{% url 'logout' %}">Logout</a>
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand js-scroll-trigger" href="/"> <font color="white"> Tdrive </font> </a>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto my-2 my-lg-0">
+
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">Meet
+                            Drive</font></a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">Using
+                            Drive</font></a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">Download</font></a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font color="#00bfff">For
+                            Business</font></a></li>
+                        <li class="nav-item"><a class="nav-link js-scroll-trigger" href="/"><font
+                                color="#00bfff">Help</font></a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="relative1"></div>
+        <div class="relative1"></div>
+        <div class="relative2">
+        <div>
+            <h1>
+                <font color="red" size="50">Welcome, {{ user.username }}</font>
+            </h1>
+            <h6><font color="white"> ----------------------------</font></h6>
+        <h3><a href="/drive">
+                    Go to TDrive
+                </a></h3>
+        <h3><a href="{% url 'logout' %}">
+                    Logout
+                </a></h3>
+        </div>
     {% else %}
         <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
             <div class="container">
                 <a class="navbar-brand js-scroll-trigger" href="/"> <font color="white"> Tdrive </font> </a>
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                        data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                        aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto my-2 my-lg-0">
                       
@@ -72,29 +103,19 @@
             </div>
         </nav>
         
-        <div class="relative"></div>
+        <div class="relative1"></div>
+        <div class="relative1"></div>
         <div class="relative">
+        <div>
             <h1>
-                <font color="red" size="50">A safe place for all your files</font></h1></div>
-        <div class="flex-container">
-            <div class="box"><h3>Personal</h3>
-                <h5>
-                    Store, share, and access your files from any device. Your first 15 GB of storage are free.
-                </h5>
-                <p><a href="{% url 'login_url' %}">
+                <font color="red" size="50">A safe place for all your files</font>
+            </h1>
+            <h6><font color="white"> ----------------------------</font></h6>
+        <h3><a href="{% url 'login_url' %}">
                     Go to TDrive
-                </a></p></div>
-            <div class="box"><h3>Business</h3>
-                <h5>
-                    With Drive Enterprise, businesses only pay for the storage employees use. It comes with Google Docs,
-                    Sheets, and Slides — and works seamlessly with Microsoft Office.
-                </h5>
-
-                <p>
-                    <a href="https://cloud.google.com/drive-enterprise/?utm_source=driveforwork&utm_medium=et&utm_content=learnmore&hl=en">
-                        learn more
-                    </a></p></div>
+                </a></h3>
         </div>
+
 
     {% endif %}
 {% endblock %}
